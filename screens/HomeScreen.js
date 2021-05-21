@@ -1,53 +1,63 @@
-import React, { Component, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import React, { useState,useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import IconFeather from 'react-native-vector-icons/Feather';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     const daysOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
     const monthsOfYear = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Sabado", "Domingo"];
     const currentDate = new Date().getDate();
     const currentDay = new Date().getDay();
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
-    const [horas, setHoras] = useState(0);
-    const [videos, setVideos] = useState(0);
-    const [revisitas, setRevisitas] = useState(0);
-    const [estudios, setEstudios] = useState(0);
 
-    const isFocused = useIsFocused();
+    const [wrapUpInform, setWrapUpInform] = useState([{ horas: 0, videos: 0, revisitas: 0, estudios: 0 }]);
+    const refVariable = useRef(0);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            loadWrapUpInform();
+            return ()=>refVariable.current=0;
+        })
+    );
 
     const loadWrapUpInform = async () => {
-        const arInforms = [];
-        const keyFormatted = currentYear + "." + currentMonth + "." + currentDay + ".";
-        let totalHoras = 0;
-        let totalVideos = 0;
-        let totalRevisitas = 0;
-        let totalEstudios = 0;
-        for (let i = 1; i >0; i++) {
-            let val = await AsyncStorage.getItem(keyFormatted + i);
-            console.log("abc");
-            if (val == null) { break; }
-            arInforms.push(JSON.parse(val));
+        if (refVariable.current == 0) {
+            /* new Date(2021, 0, 0).getDate() */
+            let keyFmtdYearMonth = new Date().getFullYear() + "." + new Date().getMonth() + ".";
+            let tHoras = 0; let tVideos = 0; let tRevisitas = 0; let tEstudios = 0;
+            let booInform = -1;
+            for (let i = 1; i <= new Date().getDate(); i++) {
+                let keyFmtdYearMonthDay = keyFmtdYearMonth + i + ".";
+                for (let j = 1; j < 20; j++) {
+                    console.log(keyFmtdYearMonthDay + j);
+                    let val = await AsyncStorage.getItem(keyFmtdYearMonthDay + j);
+                    if (val == null) { break; }
+                    else {
+                        tHoras += Number.parseInt((JSON.parse(val)).horas, 10);
+                        tVideos += Number.parseInt((JSON.parse(val)).videos, 10);
+                        tRevisitas += Number.parseInt((JSON.parse(val)).revisitas, 10);
+                        tEstudios += Number.parseInt((JSON.parse(val)).estudios, 10);
+                    }
+                }
+            }
+            booInform = wrapUpInform.map(el => {
+                console.log(el.horas + " " + tHoras);
+                if (el.horas != tHoras || el.videos != tVideos || el.revisitas != tRevisitas || el.estudios != tEstudios) return -1;
+                else {
+                    console.log("al cero");
+                    return 0;
+                }
+            });
+            if (booInform == -1) {
+                console.log("essssssto");
+                setWrapUpInform([{ horas: tHoras, videos: tVideos, revisitas: tRevisitas, estudios: tEstudios }]);
+            }
+            refVariable.current=-1;
         }
-        arInforms.map(el => {
-            totalHoras += Number.parseInt(el.horas,10);
-            totalVideos += Number.parseInt(el.videos);
-            totalRevisitas += Number.parseInt(el.revisitas);
-            totalEstudios += Number.parseInt(el.estudios);
-        });
-        console.log("se ha e");
-        setHoras(totalHoras);
-        setVideos(totalVideos);
-        setRevisitas(totalRevisitas);
-        setEstudios(totalEstudios);
     }
-
-    useEffect(() => {
-        loadWrapUpInform();
-    })
 
     return (
         <View style={mainStyle.viewMain}>
@@ -64,7 +74,7 @@ const HomeScreen = () => {
                         <Text style={bodyStyle.txtTitle}>Horas</Text>
                     </View>
                     <View>
-                        <Text style={bodyStyle.txtDescription}>{isFocused && horas}</Text>
+                        <Text style={bodyStyle.txtDescription}>{wrapUpInform.map(el => { return el.horas })}</Text>
                     </View>
                 </View>
                 <View style={bodyStyle.cards}>
@@ -73,7 +83,7 @@ const HomeScreen = () => {
                         <Text style={bodyStyle.txtTitle}>Videos</Text>
                     </View>
                     <View>
-                        <Text style={bodyStyle.txtDescription}>{isFocused && videos}</Text>
+                        <Text style={bodyStyle.txtDescription}>{wrapUpInform.map(el => { return el.videos })}</Text>
                     </View>
                 </View>
                 <View style={bodyStyle.cards}>
@@ -82,7 +92,7 @@ const HomeScreen = () => {
                         <Text style={bodyStyle.txtTitle}>Revisitas</Text>
                     </View>
                     <View>
-                        <Text style={bodyStyle.txtDescription}>{isFocused && revisitas}</Text>
+                        <Text style={bodyStyle.txtDescription}>{wrapUpInform.map(el => { return el.revisitas })}</Text>
                     </View>
                 </View>
                 <View style={bodyStyle.cards}>
@@ -91,7 +101,7 @@ const HomeScreen = () => {
                         <Text style={bodyStyle.txtTitle}>Estudios</Text>
                     </View>
                     <View>
-                        <Text style={bodyStyle.txtDescription}>{isFocused && estudios}</Text>
+                        <Text style={bodyStyle.txtDescription}>{wrapUpInform.map(el => { return el.estudios })}</Text>
                     </View>
                 </View>
             </View>

@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
 import { useForm } from "react-hook-form";
 import FomrInform from './FormInform';
 
-const InputInformScreen = () => {
+const InputInformScreen = ({ navigation }) => {
     return (
         <View>
-            <FomrInform />
+            <FomrInform navigation={navigation} />
         </View>
     );
 

@@ -7,14 +7,7 @@ const SettingsScreen = () => {
     return (
         <View>
             <Button onPress={async() => {
-                const keyFormatted = new Date().getFullYear() + "." + new Date().getMonth() + "." + new Date().getDay() + ".";
-                let counter = 1;
-
-                for (; ; counter++) {
-                    let val = await AsyncStorage.getItem(keyFormatted + counter);
-                    if (val == null) { break; }
-                    await AsyncStorage.removeItem(keyFormatted + counter);
-                }
+                AsyncStorage.clear();
             }} title="Borrar" />
         </View>
     );
