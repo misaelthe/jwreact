@@ -9,10 +9,7 @@ const App = () => {
     <NavigationContainer>
       <BottomTabs />
     </NavigationContainer>
-
   );
 }
-const mystyles = StyleSheet.create({
-  bNavigation: { width: 50 }
-});
+
 export default App;

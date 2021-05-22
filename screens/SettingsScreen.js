@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsFocused } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const SettingsScreen = () => {
+const SettingsScreen = ({navigation}) => {
     return (
-        <View>
-            <Button onPress={async() => {
+        <SafeAreaView style={styleSettings.container}>
+            <Button onPress={async () => {
                 AsyncStorage.clear();
             }} title="Borrar" />
-        </View>
+            
+        </SafeAreaView>
     );
 }
+const styleSettings = StyleSheet.create({
+    container: { flex: 1, color: 'red' }
+});
 export default SettingsScreen;

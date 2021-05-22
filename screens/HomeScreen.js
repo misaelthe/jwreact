@@ -4,6 +4,7 @@ import IconFeather from 'react-native-vector-icons/Feather';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import {  SafeAreaView } from 'react-native-safe-area-context';
 
 const HomeScreen = ({ navigation }) => {
     const daysOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
@@ -13,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
-    const [wrapUpInform, setWrapUpInform] = useState([{ horas: 0, videos: 0, revisitas: 0, estudios: 0 }]);
+    const [wrapUpInform, setWrapUpInform] = useState([{ horas: 0,minutos:0, videos: 0, revisitas: 0, estudios: 0 }]);
     const refVariable = useRef(0);
 
     useFocusEffect(
@@ -27,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
         if (refVariable.current == 0) {
             /* new Date(2021, 0, 0).getDate() */
             let keyFmtdYearMonth = new Date().getFullYear() + "." + new Date().getMonth() + ".";
-            let tHoras = 0; let tVideos = 0; let tRevisitas = 0; let tEstudios = 0;
+            let tHoras = 0; let tVideos = 0; let tRevisitas = 0; let tEstudios = 0;let tMinutos=0;
             let booInform = -1;
             for (let i = 1; i <= new Date().getDate(); i++) {
                 let keyFmtdYearMonthDay = keyFmtdYearMonth + i + ".";
@@ -37,6 +38,7 @@ const HomeScreen = ({ navigation }) => {
                     if (val == null) { break; }
                     else {
                         tHoras += Number.parseInt((JSON.parse(val)).horas, 10);
+                        tMinutos+=Number.parseInt((JSON.parse(val)).minutos, 10);
                         tVideos += Number.parseInt((JSON.parse(val)).videos, 10);
                         tRevisitas += Number.parseInt((JSON.parse(val)).revisitas, 10);
                         tEstudios += Number.parseInt((JSON.parse(val)).estudios, 10);
@@ -45,22 +47,21 @@ const HomeScreen = ({ navigation }) => {
             }
             booInform = wrapUpInform.map(el => {
                 console.log(el.horas + " " + tHoras);
-                if (el.horas != tHoras || el.videos != tVideos || el.revisitas != tRevisitas || el.estudios != tEstudios) return -1;
+                if (el.horas != tHoras || el.minutos != tMinutos ||el.videos != tVideos || el.revisitas != tRevisitas || el.estudios != tEstudios) return -1;
                 else {
-                    console.log("al cero");
                     return 0;
                 }
             });
             if (booInform == -1) {
                 console.log("essssssto");
-                setWrapUpInform([{ horas: tHoras, videos: tVideos, revisitas: tRevisitas, estudios: tEstudios }]);
+                setWrapUpInform([{ horas: tHoras,minutos:tMinutos, videos: tVideos, revisitas: tRevisitas, estudios: tEstudios }]);
             }
             refVariable.current=-1;
         }
     }
 
     return (
-        <View style={mainStyle.viewMain}>
+        <SafeAreaView style={mainStyle.viewMain}>
             <View style={headerStyle.viewDate}>
                 <TouchableOpacity style={headerStyle.btnCurrentDate}>
                     <Text style={headerStyle.txtDay}>{daysOfWeek[currentDay]} {currentDate}</Text>
@@ -74,7 +75,7 @@ const HomeScreen = ({ navigation }) => {
                         <Text style={bodyStyle.txtTitle}>Horas</Text>
                     </View>
                     <View>
-                        <Text style={bodyStyle.txtDescription}>{wrapUpInform.map(el => { return el.horas })}</Text>
+                        <Text style={bodyStyle.txtDescription}>{wrapUpInform.map(el => { return el.horas })}:{wrapUpInform.map(el => { return el.minutos })}</Text>
                     </View>
                 </View>
                 <View style={bodyStyle.cards}>
@@ -105,7 +106,7 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
 
     );
 }
