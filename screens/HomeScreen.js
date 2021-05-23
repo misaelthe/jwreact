@@ -20,16 +20,16 @@ const HomeScreen = ({ navigation }) => {
     useFocusEffect(
         React.useCallback(() => {
             loadWrapUpInform();
-            return ()=>refVariable.current=0;
         })
     );
 
     const loadWrapUpInform = async () => {
-        if (refVariable.current == 0) {
-            /* new Date(2021, 0, 0).getDate() */
+        /* if (refVariable.current == 0) { */
+            /* new Date(2021, 0, 0).getDate() days of the month */
             let keyFmtdYearMonth = new Date().getFullYear() + "." + new Date().getMonth() + ".";
             let tHoras = 0; let tVideos = 0; let tRevisitas = 0; let tEstudios = 0;let tMinutos=0;
             let booInform = -1;
+            /* Bucle para recorrer los registros del mes */
             for (let i = 1; i <= new Date().getDate(); i++) {
                 let keyFmtdYearMonthDay = keyFmtdYearMonth + i + ".";
                 for (let j = 1; j < 20; j++) {
@@ -45,19 +45,25 @@ const HomeScreen = ({ navigation }) => {
                     }
                 }
             }
+            /* Evitar minutos excedan 60 */
+            tHoras+=Number.parseInt(tMinutos/60);
+            tMinutos=tMinutos%60;
+            /* Check changes in the inform */
             booInform = wrapUpInform.map(el => {
-                console.log(el.horas + " " + tHoras);
+                console.log(el.horas + " yyyyy " + tHoras);
                 if (el.horas != tHoras || el.minutos != tMinutos ||el.videos != tVideos || el.revisitas != tRevisitas || el.estudios != tEstudios) return -1;
                 else {
                     return 0;
                 }
             });
-            if (booInform == -1) {
-                console.log("essssssto");
-                setWrapUpInform([{ horas: tHoras,minutos:tMinutos, videos: tVideos, revisitas: tRevisitas, estudios: tEstudios }]);
-            }
+            console.log("es "+booInform);
             refVariable.current=-1;
-        }
+            if (booInform == -1) {
+                setWrapUpInform([{ horas: tHoras,minutos:tMinutos, videos: tVideos, revisitas: tRevisitas, estudios: tEstudios }]);
+                console.log("si solos e -1");
+            }
+        /* }
+        else{refVariable.current=0} */
     }
 
     return (

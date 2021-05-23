@@ -1,6 +1,9 @@
 1.0.0
 -Register and show data succesfully
 -Form's Validation completed
+xTabs to be fixed
+material-bottom-tabs
+react-native-material-bottom-navigation
 
 0.0.5
 -Archivos y carpetas unused deleted

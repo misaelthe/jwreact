@@ -80,7 +80,7 @@ const FormInform = ({ navigation }) => {
                     <TextInput style={formStyles.input} keyboardType='numeric' defaultValue={minutos} onChangeText={txt => setMinutos(txt)} />
                 </View>
             </View>
-            <View style={formStyles.containers}>
+            <View>
                 <Text style={formStyles.textInput}>Videos</Text>
                 <TextInput style={formStyles.input} keyboardType='numeric' defaultValue={videos} onChangeText={txt => setVideos(txt)} />
             </View>

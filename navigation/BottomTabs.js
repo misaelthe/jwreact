@@ -5,7 +5,7 @@ import HomeScreen from '../screens/HomeScreen';
 import CalendarScreen from '../screens/CalendarScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import InformScreen from '../screens/InformScreen';
-import { SafeAreaProvider} from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,17 +13,15 @@ const MyTabs = () => {
     return (<SafeAreaProvider><Tab.Navigator tabBarOptions={{
         showLabel: false,
         style: {
-            elevation: 0,
             backgroundColor: '#ffffff',
             borderRadius: 15,
-            height: 45
+            height: 55
         }
     }}>
         <Tab.Screen name="Home" component={HomeScreen} options={{
             tabBarIcon: ({ focused }) => (
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../assets/icons/home.png')} resizeMode='contain' style={{ width: 25, height: 25}}></Image>
-                    <Text style={{ tintColor: focused ? '#e32f54' : '#e32f45' }}>Home</Text>
+                    <Image source={require('../assets/icons/home.png')} resizeMode='contain' style={{ width: 25, height: 25, tintColor: focused ? '#3F5EFB' : '#black' }}></Image>
                 </View>
             )
         }} />
@@ -31,8 +29,7 @@ const MyTabs = () => {
             component={InformScreen} options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require('../assets/icons/pencil.png')} resizeMode='contain' style={{ width: 25, height: 25}}></Image>
-                        <Text style={{ tintColor: focused ? '#e32f54' : '#e32f45' }}>Fill</Text>
+                        <Image source={require('../assets/icons/pencil.png')} resizeMode='contain' style={{ width: 25, height: 25, tintColor: focused ? '#3F5EFB' : '#black' }}></Image>
                     </View>
                 )
             }} />
@@ -40,8 +37,7 @@ const MyTabs = () => {
             component={CalendarScreen} options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require('../assets/icons/schedule.png')} resizeMode='contain' style={{ width: 25, height: 25}}></Image>
-                        <Text style={{ tintColor: focused ? '#e32f54' : '#e32f45' }}>Calendar</Text>
+                        <Image source={require('../assets/icons/schedule.png')} resizeMode='contain' style={{ width: 25, height: 25, tintColor: focused ? '#3F5EFB' : '#black' }}></Image>
                     </View>
                 )
             }} />
@@ -49,8 +45,7 @@ const MyTabs = () => {
             component={SettingsScreen} options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require('../assets/icons/settings.png')} resizeMode='contain' style={{ width: 25, height: 25, tintColor: focused ? '#e32f54' : '#e32f45' }}></Image>
-                        <Text style={{ tintColor: focused ? '#e32f54' : '#e32f45' }}>Settings</Text>
+                        <Image source={require('../assets/icons/settings.png')} resizeMode='contain' style={{ width: 25, height: 25, tintColor: focused ? '#3F5EFB' : 'black' }}></Image>
                     </View>
                 )
             }} />
