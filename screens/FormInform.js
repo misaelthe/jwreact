@@ -65,7 +65,7 @@ const FormInform = ({ navigation }) => {
             <View style={formStyles.rowTime}>
                 <View style={formStyles.containerInputTime}>
                     <Text style={formStyles.textInput}>Horas</Text>
-                    <TextInput style={formStyles.input} keyboardType='numeric' defaultValue={horas} onChangeText={txt => {
+                    <TextInput style={formStyles.input} keyboardType='numeric' value={horas} onChangeText={txt => {
                         if (nameRegex.test(txt)) {
                             setValidated(0);
                             setHoras(txt.trim());
@@ -77,20 +77,20 @@ const FormInform = ({ navigation }) => {
                 </View>
                 <View style={formStyles.containerInputTime}>
                     <Text style={formStyles.textInput}>Minutos</Text>
-                    <TextInput style={formStyles.input} keyboardType='numeric' defaultValue={minutos} onChangeText={txt => setMinutos(txt)} />
+                    <TextInput style={formStyles.input} keyboardType='numeric' value={minutos} onChangeText={txt => setMinutos(txt)}/>
                 </View>
             </View>
             <View style={formStyles.containers}>
                 <Text style={formStyles.textInput}>Videos</Text>
-                <TextInput style={formStyles.input} keyboardType='numeric' defaultValue={videos} onChangeText={txt => setVideos(txt)} />
+                <TextInput style={formStyles.input} keyboardType='numeric' value={videos} onChangeText={txt => setVideos(txt)} />
             </View>
             <View>
                 <Text style={formStyles.textInput}>Revisitas</Text>
-                <TextInput style={formStyles.input} keyboardType='numeric' defaultValue={revisitas} onChangeText={txt => setRevisitas(txt)} />
+                <TextInput style={formStyles.input} keyboardType='numeric' value={revisitas} onChangeText={txt => setRevisitas(txt)} />
             </View>
             <View>
                 <Text style={formStyles.textInput}>Estudios</Text>
-                <TextInput style={formStyles.input} keyboardType='numeric' defaultValue={estudios} onChangeText={txt => setEstudios(txt)} />
+                <TextInput style={formStyles.input} keyboardType='numeric' value={estudios} onChangeText={txt => setEstudios(txt)} />
             </View>
             <View>
                 {validated == -1 ? (<Text style={formStyles.textError}>{errorForm}</Text>) : null}

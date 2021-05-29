@@ -45,6 +45,8 @@ const HomeScreen = ({ navigation }) => {
                     }
                 }
             }
+            tHoras +=Number.parseInt(tMinutos/60);
+            tMinutos=tMinutos%60;
             booInform = wrapUpInform.map(el => {
                 console.log(el.horas + " " + tHoras);
                 if (el.horas != tHoras || el.minutos != tMinutos ||el.videos != tVideos || el.revisitas != tRevisitas || el.estudios != tEstudios) return -1;
