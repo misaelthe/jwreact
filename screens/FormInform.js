@@ -165,7 +165,7 @@ const FormInform = ({ navigation }) => {
       </View>
       <View style={[formStyles.row,{marginVertical:15}]}>
         <TouchableOpacity
-          style={[formStyles.btnSubmit, formStyles.btnClasic]}
+          style={[{flex:5}, formStyles.btnClasic]}
           onPress={() => {
             validate();
           }}
@@ -173,17 +173,17 @@ const FormInform = ({ navigation }) => {
           <Text style={formStyles.textSubmit}>Enviar</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[formStyles.btnTrash, formStyles.btnClasic]}
+          style={[{flex:1}, formStyles.btnClasic]}
           onPress={() => {
             clearForm();
           }}
         >
-          <Entypo name="trash" size={40} color="#ffffff" />
+          <Entypo name="trash" size={35} color="#ffffff" />
         </TouchableOpacity>
       </View>
       <View style={formStyles.row}>
       <TouchableOpacity
-          style={[formStyles.btnTrash, formStyles.btnClasic]}
+          style={[{flex:1}, formStyles.btnDelete]}
           onPress={() => {
             
           }}
@@ -218,10 +218,6 @@ const formStyles = StyleSheet.create({
     padding: 8,
     fontSize: 21,
   },
-  btnSubmit: {
-    flex: 5,
-  },
-  btnTrash: { flex: 1 },
   textError: {
     fontSize: 17,
     color: "red",
@@ -230,6 +226,14 @@ const formStyles = StyleSheet.create({
   btnClasic: {
     height: 65,
     backgroundColor: "#3F5EFB",
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  btnDelete:{
+    height: 65,
+    backgroundColor: "#F7102C",
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
