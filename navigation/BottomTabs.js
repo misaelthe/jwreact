@@ -2,7 +2,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import * as React from 'react';
 import HomeScreen from '../screens/HomeScreen';
-import CalendarScreen from '../screens/CalendarScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import InformScreen from '../screens/InformScreen';
 import { SafeAreaProvider} from 'react-native-safe-area-context';
@@ -33,15 +32,6 @@ const MyTabs = () => {
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <Image source={require('../assets/icons/pencil.png')} resizeMode='contain' style={{ width: 25, height: 25}}></Image>
                         <Text style={{ tintColor: focused ? '#e32f54' : '#e32f45' }}>Fill</Text>
-                    </View>
-                )
-            }} />
-        <Tab.Screen name="Calendar"
-            component={CalendarScreen} options={{
-                tabBarIcon: ({ focused }) => (
-                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require('../assets/icons/schedule.png')} resizeMode='contain' style={{ width: 25, height: 25}}></Image>
-                        <Text style={{ tintColor: focused ? '#e32f54' : '#e32f45' }}>Calendar</Text>
                     </View>
                 )
             }} />

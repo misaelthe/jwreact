@@ -1,3 +1,13 @@
+Pending
+Reach goal of hours
+Make a schedule
+5 Multiple users
+5 timeclock
+3 reporte de estudiantes y disponibilidad
+change hours
+1.0.4
+-Trash Button added, it worked
+
 1.0.0
 -Register and show data succesfully
 -Form's Validation completed
