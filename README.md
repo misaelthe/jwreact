@@ -5,6 +5,12 @@ Make a schedule
 5 timeclock
 3 reporte de estudiantes y disponibilidad
 change hours
+
+1.0.5
+-Month Buttons added, colors changed when pressed, but inform from month selectednot calculated
+-Modal created
+-Interfaz improved
+
 1.0.4
 -Trash Button added, it worked
 

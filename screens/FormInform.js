@@ -181,16 +181,7 @@ const FormInform = ({ navigation }) => {
           <Entypo name="trash" size={35} color="#ffffff" />
         </TouchableOpacity>
       </View>
-      <View style={formStyles.row}>
-      <TouchableOpacity
-          style={[{flex:1}, formStyles.btnDelete]}
-          onPress={() => {
-            
-          }}
-        >
-          <Text style={formStyles.textSubmit}>Eliminar</Text>
-        </TouchableOpacity>
-      </View>
+      
     </View>
   );
 };
@@ -231,14 +222,7 @@ const formStyles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 5,
   },
-  btnDelete:{
-    height: 65,
-    backgroundColor: "#F7102C",
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 10,
-  },
+
   textSubmit: {
     fontSize: 18,
     color: "#FFFFFF",

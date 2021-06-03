@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import IconFeather from "react-native-vector-icons/Feather";
 import IconSimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import Entypo from "react-native-vector-icons/Entypo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,25 +23,42 @@ const HomeScreen = ({ navigation }) => {
     "Marzo",
     "Abril",
     "Mayo",
-    "Sabado",
-    "Domingo",
+    "Junio",
+    "Julio",
   ];
-  const currentDate = new Date().getDate();
-  const currentDay = new Date().getDay();
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
 
   const [wrapUpInform, setWrapUpInform] = useState([
     { horas: 0, minutos: 0, videos: 0, revisitas: 0, estudios: 0 },
   ]);
+  const [currentDate, setCurrentDate] = useState(-1);
+  const [currentDay, setCurrentDay] = useState(-1);
+  const [currentMonth, setCurrentMonth] = useState(-1);
+  const [currentYear, setCurrentYear] = useState(-1);
+  const [buttonSelected, setButtonSelected] = useState(2);
   const refVariable = useRef(0);
 
   useFocusEffect(
     React.useCallback(() => {
+      setMonthBar();
       loadWrapUpInform();
       return () => (refVariable.current = 0);
     })
   );
+  /* Inicializes date params */
+  const setMonthBar = () => {
+    if (new Date().getDate() !== currentDate) {
+      setCurrentDate(new Date().getDate());
+    }
+    if (new Date().getDay() !== currentDay) {
+      setCurrentDay(new Date().getDay());
+    }
+    if (new Date().getMonth() !== currentMonth) {
+      setCurrentMonth(new Date().getMonth());
+    }
+    if (new Date().getFullYear() !== currentYear) {
+      setCurrentYear(new Date().getFullYear());
+    }
+  };
 
   const loadWrapUpInform = async () => {
     if (refVariable.current == 0) {
@@ -114,56 +132,134 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={mainStyle.main}>
+        {/* begins month buttons */}
         <View style={mainStyle.row}>
-          <View style={mainStyle.elInform}>
-            <View style={{ justifyContent: "center" }}>
-              <IconFeather name="clock" size={40} />
-            </View>
-            <View>
-              <Text style={bodyStyle.txtDescription}>
-                {wrapUpInform.map((el) => {
-                  return el.horas;
-                })}
-                :
-                {wrapUpInform.map((el) => {
-                  return el.minutos;
-                })}
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                setButtonSelected(0);
+              }}
+              style={[
+                bodyStyle.btnMonth,
+                {
+                  backgroundColor: buttonSelected === 0 ? "#7540EE" : "#F0F0F6",
+                },
+              ]}
+            >
+              <Text
+                style={{ color: buttonSelected === 0 ? "#ffffff" : "#7540EE" }}
+              >
+                {currentMonth == -1 ? null : monthsOfYear[currentMonth - 2]}
               </Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                setButtonSelected(1);
+              }}
+              style={bodyStyle.btnMonth}
+              style={[
+                bodyStyle.btnMonth,
+                {
+                  backgroundColor: buttonSelected === 1 ? "#7540EE" : "#F0F0F6",
+                },
+              ]}
+            >
+              <Text
+                style={{ color: buttonSelected === 1 ? "#ffffff" : "#7540EE" }}
+              >
+                {currentMonth == -1 ? null : monthsOfYear[currentMonth - 1]}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                setButtonSelected(2);
+              }}
+              style={bodyStyle.btnMonth}
+              style={[
+                bodyStyle.btnMonth,
+                {
+                  backgroundColor: buttonSelected === 2 ? "#7540EE" : "#F0F0F6",
+                },
+              ]}
+            >
+              <Text
+                style={{ color: buttonSelected === 2 ? "#ffffff" : "#7540EE" }}
+              >
+                {currentMonth == -1 ? null : monthsOfYear[currentMonth]}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* begins wrap-up inform */}
+        <View style={mainStyle.rowHorizontal}>
+          {/* begins first row wrap-up inform */}
+          <View style={mainStyle.row}>
+            <View style={bodyStyle.elInform}>
+              <View style={{ justifyContent: "center" }}>
+                <IconFeather name="clock" size={40} />
+              </View>
+              <View>
+                <Text style={bodyStyle.txtDescription}>
+                  {wrapUpInform.map((el) => {
+                    return el.horas;
+                  })}
+                  :
+                  {wrapUpInform.map((el) => {
+                    return el.minutos;
+                  })}
+                </Text>
+              </View>
+            </View>
+            <View style={bodyStyle.elInform}>
+              <View>
+                <Entypo name="folder-video" size={40} />
+              </View>
+              <View>
+                <Text style={bodyStyle.txtDescription}>
+                  {wrapUpInform.map((el) => {
+                    return el.videos;
+                  })}
+                </Text>
+              </View>
             </View>
           </View>
-          <View style={mainStyle.elInform}>
-            <View><IconFeather name="phone-call" size={40} /></View>
-            <View>
-              <Text style={bodyStyle.txtDescription}>
-                {wrapUpInform.map((el) => {
-                  return el.videos;
-                })}
-              </Text>
+          {/* ends first row wrap-up inform */}
+          {/* begins second row wrap-up inform */}
+          <View style={mainStyle.row}>
+            <View style={mainStyle.row}>
+              <View style={bodyStyle.elInform}>
+                <View>
+                  <IconSimpleLineIcons name="user" size={40} />
+                </View>
+                <View>
+                  <Text style={bodyStyle.txtDescription}>
+                    {wrapUpInform.map((el) => {
+                      return el.revisitas;
+                    })}
+                  </Text>
+                </View>
+              </View>
+              <View style={bodyStyle.elInform}>
+                <View>
+                  <IconSimpleLineIcons name="people" size={40} />
+                </View>
+                <View>
+                  <Text style={bodyStyle.txtDescription}>
+                    {wrapUpInform.map((el) => {
+                      return el.estudios;
+                    })}
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>
-        <View style={mainStyle.row}>
-          <View style={mainStyle.elInform}>
-            <View><IconSimpleLineIcons name="user" size={40} /></View>
-            <View>
-              <Text style={bodyStyle.txtDescription}>
-                {wrapUpInform.map((el) => {
-                  return el.revisitas;
-                })}
-              </Text>
-            </View>
-          </View>
-          <View style={mainStyle.elInform}>
-            <View><IconSimpleLineIcons name="people" size={40} /></View>
-            <View>
-              <Text style={bodyStyle.txtDescription}>
-                {wrapUpInform.map((el) => {
-                  return el.estudios;
-                })}
-              </Text>
-            </View>
-          </View>
-        </View>      
+        {/* ends second row wrap-up inform */}
+        {/* ends wrap-up inform */}
       </View>
     </SafeAreaView>
   );
@@ -171,12 +267,13 @@ const HomeScreen = ({ navigation }) => {
 
 const mainStyle = StyleSheet.create({
   container: { backgroundColor: "#7540EE", flex: 1 },
-  wrapperHeader: { flex: 1, backgroundColor: "#F0F0F6" },
+  wrapperHeader: { flex: 2, backgroundColor: "#F0F0F6" },
   header: {
     borderBottomRightRadius: 50,
-    padding: 15,
-    backgroundColor: "#7540EE",
     flex: 1,
+    backgroundColor: "#7540EE",
+    justifyContent: "center",
+    alignItems: "center",
   },
   main: {
     backgroundColor: "#F0F0F6",
@@ -185,7 +282,28 @@ const mainStyle = StyleSheet.create({
     padding: 15,
     flexDirection: "column",
   },
-  row: { flexDirection: "row", justifyContent: "space-between" },
+  row: { flexDirection: "row", justifyContent: "space-between",width:"100%" },
+  rowHorizontal: {
+    flexDirection: "colum",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width:"100%" 
+  },
+});
+const headerStyle = StyleSheet.create({
+  txtDay: { fontSize: 40, fontWeight: "bold", textAlign: "center" },
+  txtMonth: { fontSize: 30, textAlign: "center" },
+});
+const bodyStyle = StyleSheet.create({
+  btnMonth: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginVertical: 10,
+    borderRadius: 15,
+  },
+  viewWrapUp: { flex: 3, backgroundColor: "white", padding: 7 },
   elInform: {
     height: 150,
     width: "45%",
@@ -193,39 +311,9 @@ const mainStyle = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 15,
     padding: 10,
-  },
-});
-const headerStyle = StyleSheet.create({
-  viewDate: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 10,
-    backgroundColor: "#4874A8",
-    borderRadius: 25,
-  },
-  btnCurrentDate: {
-    height: 50,
-    flexDirection: "column",
-    flex: 1,
-    height: 150,
-    justifyContent: "center",
-    backgroundColor: "#4D9CD0",
-    borderRadius: 25,
-  },
-  txtDay: { fontSize: 40, fontWeight: "bold", textAlign: "center" },
-  txtMonth: { fontSize: 30, textAlign: "center" },
-});
-const bodyStyle = StyleSheet.create({
-  viewWrapUp: { flex: 3, backgroundColor: "white", padding: 7 },
-  cards: {
-    borderWidth: 1,
-    borderRadius: 25,
-    flexDirection: "row",
-    padding: 3,
-    flex: 1,
-    margin: 7,
     justifyContent: "space-between",
     alignItems: "center",
+    marginVertical: 10,
   },
   viewTitle: { flexDirection: "row", alignItems: "center" },
   txtTitle: { fontSize: 30, marginLeft: 7 },

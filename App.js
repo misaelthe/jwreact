@@ -1,15 +1,20 @@
-import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import BottomTabs from "./navigation/BottomTabs";
+import EditInformScreen from "./screens/EditInformScreen";
 
-import { NavigationContainer } from '@react-navigation/native';
-import BottomTabs from './navigation/BottomTabs';
+const RootStack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <BottomTabs />
+      <RootStack.Navigator mode="modal" headerMode="none">
+        <RootStack.Screen name="Main" component={BottomTabs} />
+        <RootStack.Screen name="EditInformScreen" component={EditInformScreen} />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
-}
+};
 
 export default App;
