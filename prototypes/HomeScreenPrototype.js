@@ -28,12 +28,8 @@ const HomeScreen = ({ navigation }) => {
   ];
 
   const [wrapUpInform, setWrapUpInform] = useState([
-    { tiempo: "0 : 0", videos: 0, revisitas: 0, estudios: 0 },
+    { horas: 0, minutos: 0, videos: 0, revisitas: 0, estudios: 0 },
   ]);
-  const [currentTiempo, setCurrentTiempo] = useState("0 : 0");
-  const [currentVideos, setCurrentVideos] = useState(0);
-  const [currentRevisitas, setCurrentRevisitas] = useState(0);
-  const [currentEstudios, setCurrentEstudios] = useState(0);
   const [currentDate, setCurrentDate] = useState(-1);
   const [currentDay, setCurrentDay] = useState(-1);
   const [currentMonth, setCurrentMonth] = useState(-1);
@@ -44,7 +40,8 @@ const HomeScreen = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       setMonthBar();
-      loadWrapUpInform(currentYear, currentMonth);
+      reduceRegisters();
+      loadWrapUpInform(new Date().getMonth());
       return () => (refVariable.current = 0);
     })
   );
@@ -63,72 +60,84 @@ const HomeScreen = ({ navigation }) => {
       setCurrentYear(new Date().getFullYear());
     }
   };
-
-  const loadWrapUpInform = async (year, month) => {
-    if (refVariable.current == 0) {
-       refVariable.current = -1; 
-      console.log(" entra en el primer if "+month);
-      let keyFormatted = year + "." + month;
-      let val = await AsyncStorage.getItem(keyFormatted);
-      if (val != null) {
-        let tTiempo = JSON.parse(val).tiempo;
-        let tVideos = Number.parseInt(JSON.parse(val).videos, 10);
-        let tRevisitas = Number.parseInt(JSON.parse(val).revisitas, 10);
-        let tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
-        console.log(
-          "antes del boo " +
-            tTiempo +
-            " " +
-            tVideos +
-            " " +
-            tRevisitas +
-            " " +
-            tEstudios
-        );
-        if (
-          currentTiempo !== tTiempo ||
-          currentVideos != tVideos ||
-          currentRevisitas != tRevisitas ||
-          currentEstudios != tEstudios
-        ) {
-          setCurrentTiempo(tTiempo);
-          setCurrentVideos(tVideos);
-          setCurrentRevisitas(tRevisitas);
-          setCurrentEstudios(tEstudios);
-          /* currentVideos = tVideos;
-          currentRevisitas = tRevisitas;
-          currentEstudios = tEstudios; */
-        }
-        /* wrapUpInform.map((el) => {
-          if (
-            el.tiempo !== tTiempo ||
-            el.videos != tVideos ||
-            el.revisitas != tRevisitas ||
-            el.estudios != tEstudios
-          ) {
-            setWrapUpInform([
-              {
-                tiempo: tTiempo,
-                videos: tVideos,
-                revisitas: tRevisitas,
-                estudios: tEstudios,
-              },
-            ]);
+  const reduceRegisters=()=>{
+    let keyFmtdYearMonth = currentYear + "." + (currentMonth) + ".";
+      let tHoras = 0;
+      let tVideos = 0;
+      let tRevisitas = 0;
+      let tEstudios = 0;
+      let tMinutos = 0;
+      for (let i = 1; i <= currentDate; i++) {
+        let keyFmtdYearMonthDay = keyFmtdYearMonth + i + ".";
+        for (let j = 1; j < 20; j++) {
+          let val = await AsyncStorage.getItem(keyFmtdYearMonthDay + j);
+          if (val == null) {
+            break;
+          } else {
+            tHoras += Number.parseInt(JSON.parse(val).horas, 10);
+            tMinutos += Number.parseInt(JSON.parse(val).minutos, 10);
+            tVideos += Number.parseInt(JSON.parse(val).videos, 10);
+            tRevisitas += Number.parseInt(JSON.parse(val).revisitas, 10);
+            tEstudios += Number.parseInt(JSON.parse(val).estudios, 10);
           }
-        }); */
-      } else { setCurrentTiempo("0 : 0");
-      setCurrentVideos(0);
-          setCurrentRevisitas(0);
-          setCurrentEstudios(0);
-        /* setWrapUpInform([
-          {
-            tiempo: "0 : 0",
-            videos: 0,
-            revisitas: 0,
-            estudios: 0,
-          },
-        ]); */
+        }
       }
+  }
+  const loadWrapUpInform = async (month) => {
+    if (refVariable.current == 0) {
+      /* new Date(2021, 0, 0).getDate() */
+      let keyFmtdYearMonth = currentYear + "." + month + ".";
+      let tHoras = 0;
+      let tVideos = 0;
+      let tRevisitas = 0;
+      let tEstudios = 0;
+      let tMinutos = 0;
+      let booInform = -1;
+      for (let i = 1; i <= currentDate; i++) {
+        let keyFmtdYearMonthDay = keyFmtdYearMonth + i + ".";
+        for (let j = 1; j < 20; j++) {
+          console.log(keyFmtdYearMonthDay + j);
+          let val = await AsyncStorage.getItem(keyFmtdYearMonthDay + j);
+          if (val == null) {
+            break;
+          } else {
+            tHoras += Number.parseInt(JSON.parse(val).horas, 10);
+            tMinutos += Number.parseInt(JSON.parse(val).minutos, 10);
+            tVideos += Number.parseInt(JSON.parse(val).videos, 10);
+            tRevisitas += Number.parseInt(JSON.parse(val).revisitas, 10);
+            tEstudios += Number.parseInt(JSON.parse(val).estudios, 10);
+          }
+        }
+      }
+      tHoras += Number.parseInt(tMinutos / 60);
+      tMinutos = tMinutos % 60;
+      booInform = wrapUpInform.map((el) => {
+        console.log(el.horas + " " + tHoras);
+        if (
+          el.horas != tHoras ||
+          el.minutos != tMinutos ||
+          el.videos != tVideos ||
+          el.revisitas != tRevisitas ||
+          el.estudios != tEstudios
+        )
+          return -1;
+        else {
+          return 0;
+        }
+      });
+      if (booInform == -1) {
+        console.log("essssssto");
+        setWrapUpInform([
+          {
+            horas: tHoras,
+            minutos: tMinutos,
+            videos: tVideos,
+            revisitas: tRevisitas,
+            estudios: tEstudios,
+          },
+        ]);
+      }
+      refVariable.current = -1;
     }
   };
 
@@ -153,11 +162,11 @@ const HomeScreen = ({ navigation }) => {
                 setButtonSelected(0);
                 const xmonth = currentMonth - 2;
                 if (xmonth === -1) {
-                  loadWrapUpInform(currentYear - 1, 11);
+                  loadWrapUpInform(11);
                 } else if (xmonth === -2) {
-                  loadWrapUpInform(currentYear - 1, 10);
+                  loadWrapUpInform(10);
                 } else {
-                  loadWrapUpInform(currentYear, currentMonth-2);
+                  loadWrapUpInform(currentMonth);
                 }
               }}
               style={[
@@ -177,12 +186,12 @@ const HomeScreen = ({ navigation }) => {
           <View>
             <TouchableOpacity
               onPress={() => {
-                setButtonSelected(1);console.log("entor a la consola del segbd buton");
+                setButtonSelected(1);
                 const xmonth = currentMonth - 1;
                 if (xmonth === -1) {
-                  loadWrapUpInform(currentYear - 1, 11);
+                  loadWrapUpInform(11);
                 } else {
-                  loadWrapUpInform(currentYear, currentMonth-1);
+                  loadWrapUpInform(currentMonth);
                 }
               }}
               style={bodyStyle.btnMonth}
@@ -202,9 +211,9 @@ const HomeScreen = ({ navigation }) => {
           </View>
           <View>
             <TouchableOpacity
-              onPress={() => {console.log("entor a la consola del buton");
+              onPress={() => {
                 setButtonSelected(2);
-                loadWrapUpInform(currentYear, currentMonth);
+                loadWrapUpInform(currentMonth);
               }}
               style={bodyStyle.btnMonth}
               style={[
@@ -232,7 +241,13 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <View>
                 <Text style={bodyStyle.txtDescription}>
-                  {currentTiempo}
+                  {wrapUpInform.map((el) => {
+                    return el.horas;
+                  })}
+                  :
+                  {wrapUpInform.map((el) => {
+                    return el.minutos;
+                  })}
                 </Text>
               </View>
             </View>
@@ -242,7 +257,9 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <View>
                 <Text style={bodyStyle.txtDescription}>
-                  {currentVideos}
+                  {wrapUpInform.map((el) => {
+                    return el.videos;
+                  })}
                 </Text>
               </View>
             </View>
@@ -257,7 +274,9 @@ const HomeScreen = ({ navigation }) => {
                 </View>
                 <View>
                   <Text style={bodyStyle.txtDescription}>
-                    {currentRevisitas}
+                    {wrapUpInform.map((el) => {
+                      return el.revisitas;
+                    })}
                   </Text>
                 </View>
               </View>
@@ -267,7 +286,9 @@ const HomeScreen = ({ navigation }) => {
                 </View>
                 <View>
                   <Text style={bodyStyle.txtDescription}>
-                    {currentEstudios}
+                    {wrapUpInform.map((el) => {
+                      return el.estudios;
+                    })}
                   </Text>
                 </View>
               </View>
