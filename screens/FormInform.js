@@ -21,7 +21,7 @@ const FormInform = ({ navigation }) => {
   const nameRegex = new RegExp(/^[1-9]+$/i);
 
   const registerInform = async (obj) => {
-    const keyFormatted = new Date().getFullYear() + "." + 4
+    const keyFormatted = new Date().getFullYear() + "." + 3
     const val = await AsyncStorage.getItem(keyFormatted);
     if (val == null) {
       const newObj = {

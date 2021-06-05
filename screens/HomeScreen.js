@@ -43,6 +43,7 @@ const HomeScreen = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      console.log("en le use focus");
       setMonthBar();
       loadWrapUpInform(currentYear, currentMonth);
       return () => (refVariable.current = 0);
@@ -63,11 +64,31 @@ const HomeScreen = ({ navigation }) => {
       setCurrentYear(new Date().getFullYear());
     }
   };
+  const loadWrapUpInformByMonth = async (year, month) => {
+    let keyFormatted = year + "." + month;
+    let val = await AsyncStorage.getItem(keyFormatted);
+    if (val != null) {console.log("esto en el bymonth"+month);
+      let tTiempo = JSON.parse(val).tiempo;
+      let tVideos = Number.parseInt(JSON.parse(val).videos, 10);
+      let tRevisitas = Number.parseInt(JSON.parse(val).revisitas, 10);
+      let tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
 
-  const loadWrapUpInform = async (year, month) => {
+      setCurrentTiempo(tTiempo);
+          setCurrentVideos(tVideos);
+          setCurrentRevisitas(tRevisitas);
+          setCurrentEstudios(tEstudios);
+    }
+    else{
+      setCurrentTiempo("0 : 0");
+        setCurrentVideos(0);
+        setCurrentRevisitas(0);
+        setCurrentEstudios(0);
+    }
+  };
+  const loadWrapUpInform = async (year, month) => {console.log(" antes del en el primer if " + month+" refvar"+refVariable.current );
     if (refVariable.current == 0) {
-       refVariable.current = -1; 
-      console.log(" entra en el primer if "+month);
+      refVariable.current = -1;
+      console.log(" entra en el primer if " + month+" refvar"+refVariable.current );
       let keyFormatted = year + "." + month;
       let val = await AsyncStorage.getItem(keyFormatted);
       if (val != null) {
@@ -95,39 +116,12 @@ const HomeScreen = ({ navigation }) => {
           setCurrentVideos(tVideos);
           setCurrentRevisitas(tRevisitas);
           setCurrentEstudios(tEstudios);
-          /* currentVideos = tVideos;
-          currentRevisitas = tRevisitas;
-          currentEstudios = tEstudios; */
         }
-        /* wrapUpInform.map((el) => {
-          if (
-            el.tiempo !== tTiempo ||
-            el.videos != tVideos ||
-            el.revisitas != tRevisitas ||
-            el.estudios != tEstudios
-          ) {
-            setWrapUpInform([
-              {
-                tiempo: tTiempo,
-                videos: tVideos,
-                revisitas: tRevisitas,
-                estudios: tEstudios,
-              },
-            ]);
-          }
-        }); */
-      } else { setCurrentTiempo("0 : 0");
-      setCurrentVideos(0);
-          setCurrentRevisitas(0);
-          setCurrentEstudios(0);
-        /* setWrapUpInform([
-          {
-            tiempo: "0 : 0",
-            videos: 0,
-            revisitas: 0,
-            estudios: 0,
-          },
-        ]); */
+      } else {
+        setCurrentTiempo("0 : 0");
+        setCurrentVideos(0);
+        setCurrentRevisitas(0);
+        setCurrentEstudios(0);
       }
     }
   };
@@ -150,14 +144,13 @@ const HomeScreen = ({ navigation }) => {
           <View>
             <TouchableOpacity
               onPress={() => {
-                setButtonSelected(0);
                 const xmonth = currentMonth - 2;
                 if (xmonth === -1) {
-                  loadWrapUpInform(currentYear - 1, 11);
+                  loadWrapUpInformByMonth(currentYear - 1, 11);
                 } else if (xmonth === -2) {
-                  loadWrapUpInform(currentYear - 1, 10);
+                  loadWrapUpInformByMonth(currentYear - 1, 10);
                 } else {
-                  loadWrapUpInform(currentYear, currentMonth-2);
+                  loadWrapUpInformByMonth(currentYear, currentMonth - 2);
                 }
               }}
               style={[
@@ -177,12 +170,13 @@ const HomeScreen = ({ navigation }) => {
           <View>
             <TouchableOpacity
               onPress={() => {
-                setButtonSelected(1);console.log("entor a la consola del segbd buton");
+                console.log("entor a la consola del segbd buton");
                 const xmonth = currentMonth - 1;
-                if (xmonth === -1) {
-                  loadWrapUpInform(currentYear - 1, 11);
+                if (xmonth == -1) {
+                  loadWrapUpInformByMonth(currentYear - 1, 11);
                 } else {
-                  loadWrapUpInform(currentYear, currentMonth-1);
+                  loadWrapUpInformByMonth(currentYear, currentMonth - 1);
+                  console.log("me imriem sta cosa f"+currentMonth);
                 }
               }}
               style={bodyStyle.btnMonth}
@@ -202,9 +196,9 @@ const HomeScreen = ({ navigation }) => {
           </View>
           <View>
             <TouchableOpacity
-              onPress={() => {console.log("entor a la consola del buton");
-                setButtonSelected(2);
-                loadWrapUpInform(currentYear, currentMonth);
+              onPress={() => {
+                console.log("entor a la consola del buton");
+                loadWrapUpInformByMonth(currentYear, currentMonth);
               }}
               style={bodyStyle.btnMonth}
               style={[
@@ -231,9 +225,7 @@ const HomeScreen = ({ navigation }) => {
                 <IconFeather name="clock" size={40} />
               </View>
               <View>
-                <Text style={bodyStyle.txtDescription}>
-                  {currentTiempo}
-                </Text>
+                <Text style={bodyStyle.txtDescription}>{currentTiempo}</Text>
               </View>
             </View>
             <View style={bodyStyle.elInform}>
@@ -241,9 +233,7 @@ const HomeScreen = ({ navigation }) => {
                 <Entypo name="folder-video" size={40} />
               </View>
               <View>
-                <Text style={bodyStyle.txtDescription}>
-                  {currentVideos}
-                </Text>
+                <Text style={bodyStyle.txtDescription}>{currentVideos}</Text>
               </View>
             </View>
           </View>
