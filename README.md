@@ -1,21 +1,19 @@
-Pending
-Reach goal of hours
-Make a schedule
-5 Multiple users
-5 timeclock
-3 reporte de estudiantes y disponibilidad
-change hours
+# My JWREACT
+![06-05-2021AD](/assets/screenshots/06-05-2021AD.png)
+### Pending tasks
+- [ ]change hours
 
-1.0.8
--New logic brought to my programme
--state var inform in home splited into 4 state vars
--Month buttons tested and working
--Amount of vars reduced 
+### 1.0.8
+*New logic brought to my programme
+*state var inform in home splited into 4 state vars
+*Month buttons tested and working
+*Amount of vars reduced 
 
-1.0.5
--Month Buttons added, colors changed when pressed, but inform from month selectednot calculated
--Modal created
--Interfaz improved
+### 1.0.5
+
+*Month Buttons added, colors changed when pressed, but inform from month selectednot calculated
+*Modal created
+*Interfaz improved
 
 1.0.4
 -Trash Button added, it worked
@@ -40,3 +38,11 @@ change hours
 
 0.0.1
 -HomeScreen added
+
+### Some points to look forward to
+
+*Reach goal of hours
+*Make a schedule
+*Multiple users
+*timeclock
+*reporte de estudiantes y disponibilidad
