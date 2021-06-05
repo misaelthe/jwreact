@@ -3,6 +3,13 @@
 ### Pending tasks
 - [ ]change hours
 
+### 1.0.9
+* tabs' focus event color fixed
+* month buttons' containers overflowed problem fixed
+* header's date working properly
+* month button text's size increased
+* more constants added to reduce the amount of styles
+
 ### 1.0.8
 * New logic brought to my programme
 * state var inform in home splited into 4 state vars

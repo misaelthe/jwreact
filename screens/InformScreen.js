@@ -21,17 +21,7 @@ const InformScreen = ({ navigation }) => {
               Recuerda que cada minuto cuenta.
             </Text>
           </View>
-          <View>
-            <TouchableOpacity
-              style={[{ flex: 1 }, informStyle.btnDelete]}
-              onPress={() => {
-                navigation.navigate('EditInformScreen')
-              }}
-            >
-              <Text style={informStyle.textSubmit}>Eliminar</Text>
-            </TouchableOpacity>
-          </View>
-          <FormInform navigation={navigation} />
+                   <FormInform navigation={navigation} />
           
         </View>
       </ScrollView>
@@ -43,14 +33,7 @@ const informStyle = StyleSheet.create({
   containerTitle: { marginVertical: 20 },
   title: { fontSize: 32, fontWeight: "bold" },
   subtitle: { fontSize: 17, color: "gray", marginVertical: 5 },
-  btnDelete:{
-    height: 65,
-    backgroundColor: "#F7102C",
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 10,
-  },
+  
   textSubmit: {
     fontSize: 18,
     color: "#FFFFFF",
