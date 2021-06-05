@@ -21,7 +21,7 @@ const FormInform = ({ navigation }) => {
   const nameRegex = new RegExp(/^[1-9]+$/i);
 
   const registerInform = async (obj) => {
-    const keyFormatted = new Date().getFullYear() + "." + 3
+    const keyFormatted = new Date().getFullYear() + "." + new Date().getMonth();
     const val = await AsyncStorage.getItem(keyFormatted);
     if (val == null) {
       const newObj = {
@@ -40,7 +40,7 @@ const FormInform = ({ navigation }) => {
       const tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
 
       const newObj = {
-        tiempo: tHoras + obj.horas + ":" + (tMinutos + obj.minutos),
+        tiempo: tHoras + obj.horas + " : " + (tMinutos + obj.minutos),
         videos: tVideos + obj.videos,
         revisitas: tRevisitas + obj.revisitas,
         estudios: tEstudios + obj.estudios,

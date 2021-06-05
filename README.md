@@ -6,6 +6,12 @@ Make a schedule
 3 reporte de estudiantes y disponibilidad
 change hours
 
+1.0.8
+-New logic brought to my programme
+-state var inform in home splited into 4 state vars
+-Month buttons tested and working
+-Amount of vars reduced 
+
 1.0.5
 -Month Buttons added, colors changed when pressed, but inform from month selectednot calculated
 -Modal created

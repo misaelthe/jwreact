@@ -27,102 +27,45 @@ const HomeScreen = ({ navigation }) => {
     "Julio",
   ];
 
-  const [wrapUpInform, setWrapUpInform] = useState([
-    { tiempo: "0 : 0", videos: 0, revisitas: 0, estudios: 0 },
-  ]);
   const [currentTiempo, setCurrentTiempo] = useState("0 : 0");
   const [currentVideos, setCurrentVideos] = useState(0);
   const [currentRevisitas, setCurrentRevisitas] = useState(0);
   const [currentEstudios, setCurrentEstudios] = useState(0);
-  const [currentDate, setCurrentDate] = useState(-1);
-  const [currentDay, setCurrentDay] = useState(-1);
-  const [currentMonth, setCurrentMonth] = useState(-1);
-  const [currentYear, setCurrentYear] = useState(-1);
+  const [currentDate, setCurrentDate] = useState(new Date().getDate());
+  const [currentDay, setCurrentDay] = useState(new Date().getDay());
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [buttonSelected, setButtonSelected] = useState(2);
-  const refVariable = useRef(0);
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log("en le use focus");
-      setMonthBar();
-      loadWrapUpInform(currentYear, currentMonth);
-      return () => (refVariable.current = 0);
+      loadWrapUpInform();
     })
   );
-  /* Inicializes date params */
-  const setMonthBar = () => {
-    if (new Date().getDate() !== currentDate) {
-      setCurrentDate(new Date().getDate());
-    }
-    if (new Date().getDay() !== currentDay) {
-      setCurrentDay(new Date().getDay());
-    }
-    if (new Date().getMonth() !== currentMonth) {
-      setCurrentMonth(new Date().getMonth());
-    }
-    if (new Date().getFullYear() !== currentYear) {
-      setCurrentYear(new Date().getFullYear());
-    }
-  };
-  const loadWrapUpInformByMonth = async (year, month) => {
-    let keyFormatted = year + "." + month;
+  const loadWrapUpInform = async () => {
+    let keyFormatted = currentYear + "." + currentMonth;
     let val = await AsyncStorage.getItem(keyFormatted);
-    if (val != null) {console.log("esto en el bymonth"+month);
+    if (val != null) {
       let tTiempo = JSON.parse(val).tiempo;
       let tVideos = Number.parseInt(JSON.parse(val).videos, 10);
       let tRevisitas = Number.parseInt(JSON.parse(val).revisitas, 10);
       let tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
-
-      setCurrentTiempo(tTiempo);
-          setCurrentVideos(tVideos);
-          setCurrentRevisitas(tRevisitas);
-          setCurrentEstudios(tEstudios);
-    }
-    else{
-      setCurrentTiempo("0 : 0");
-        setCurrentVideos(0);
-        setCurrentRevisitas(0);
-        setCurrentEstudios(0);
-    }
-  };
-  const loadWrapUpInform = async (year, month) => {console.log(" antes del en el primer if " + month+" refvar"+refVariable.current );
-    if (refVariable.current == 0) {
-      refVariable.current = -1;
-      console.log(" entra en el primer if " + month+" refvar"+refVariable.current );
-      let keyFormatted = year + "." + month;
-      let val = await AsyncStorage.getItem(keyFormatted);
-      if (val != null) {
-        let tTiempo = JSON.parse(val).tiempo;
-        let tVideos = Number.parseInt(JSON.parse(val).videos, 10);
-        let tRevisitas = Number.parseInt(JSON.parse(val).revisitas, 10);
-        let tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
-        console.log(
-          "antes del boo " +
-            tTiempo +
-            " " +
-            tVideos +
-            " " +
-            tRevisitas +
-            " " +
-            tEstudios
-        );
-        if (
-          currentTiempo !== tTiempo ||
-          currentVideos != tVideos ||
-          currentRevisitas != tRevisitas ||
-          currentEstudios != tEstudios
-        ) {
-          setCurrentTiempo(tTiempo);
-          setCurrentVideos(tVideos);
-          setCurrentRevisitas(tRevisitas);
-          setCurrentEstudios(tEstudios);
-        }
-      } else {
-        setCurrentTiempo("0 : 0");
-        setCurrentVideos(0);
-        setCurrentRevisitas(0);
-        setCurrentEstudios(0);
+      if (
+        currentTiempo !== tTiempo ||
+        currentVideos != tVideos ||
+        currentRevisitas != tRevisitas ||
+        currentEstudios != tEstudios
+      ) {
+        setCurrentTiempo(tTiempo);
+        setCurrentVideos(tVideos);
+        setCurrentRevisitas(tRevisitas);
+        setCurrentEstudios(tEstudios);
       }
+    } else {
+      setCurrentTiempo("0 : 0");
+      setCurrentVideos(0);
+      setCurrentRevisitas(0);
+      setCurrentEstudios(0);
     }
   };
 
@@ -146,12 +89,17 @@ const HomeScreen = ({ navigation }) => {
               onPress={() => {
                 const xmonth = currentMonth - 2;
                 if (xmonth === -1) {
-                  loadWrapUpInformByMonth(currentYear - 1, 11);
+                  setCurrentYear(new Date().getFullYear() - 1);
+                  setCurrentMonth(11);
                 } else if (xmonth === -2) {
-                  loadWrapUpInformByMonth(currentYear - 1, 10);
+                  setCurrentYear(new Date().getFullYear() - 1);
+                  setCurrentMonth(10);
                 } else {
-                  loadWrapUpInformByMonth(currentYear, currentMonth - 2);
+                  setCurrentYear(new Date().getFullYear());
+                  setCurrentMonth(new Date().getMonth() - 2);
                 }
+                loadWrapUpInform();
+                setButtonSelected(0);
               }}
               style={[
                 bodyStyle.btnMonth,
@@ -163,21 +111,22 @@ const HomeScreen = ({ navigation }) => {
               <Text
                 style={{ color: buttonSelected === 0 ? "#ffffff" : "#7540EE" }}
               >
-                {monthsOfYear[currentMonth - 2]}
+                {monthsOfYear[new Date().getMonth() - 2]}
               </Text>
             </TouchableOpacity>
           </View>
           <View>
             <TouchableOpacity
               onPress={() => {
-                console.log("entor a la consola del segbd buton");
                 const xmonth = currentMonth - 1;
                 if (xmonth == -1) {
-                  loadWrapUpInformByMonth(currentYear - 1, 11);
+                  setCurrentYear(new Date().getFullYear() - 1);
                 } else {
-                  loadWrapUpInformByMonth(currentYear, currentMonth - 1);
-                  console.log("me imriem sta cosa f"+currentMonth);
+                  setCurrentYear(new Date().getFullYear());
                 }
+                setCurrentMonth(new Date().getMonth() - 1);
+                loadWrapUpInform();
+                setButtonSelected(1);
               }}
               style={bodyStyle.btnMonth}
               style={[
@@ -190,15 +139,17 @@ const HomeScreen = ({ navigation }) => {
               <Text
                 style={{ color: buttonSelected === 1 ? "#ffffff" : "#7540EE" }}
               >
-                {monthsOfYear[currentMonth - 1]}
+                {monthsOfYear[new Date().getMonth() - 1]}
               </Text>
             </TouchableOpacity>
           </View>
           <View>
             <TouchableOpacity
               onPress={() => {
-                console.log("entor a la consola del buton");
-                loadWrapUpInformByMonth(currentYear, currentMonth);
+                setCurrentYear(new Date().getFullYear());
+                setCurrentMonth(new Date().getMonth());
+                loadWrapUpInform();
+                setButtonSelected(2);
               }}
               style={bodyStyle.btnMonth}
               style={[
@@ -211,7 +162,7 @@ const HomeScreen = ({ navigation }) => {
               <Text
                 style={{ color: buttonSelected === 2 ? "#ffffff" : "#7540EE" }}
               >
-                {monthsOfYear[currentMonth]}
+                {monthsOfYear[new Date().getMonth()]}
               </Text>
             </TouchableOpacity>
           </View>
