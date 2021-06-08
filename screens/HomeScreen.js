@@ -80,7 +80,7 @@ const HomeScreen = ({ navigation }) => {
           <Text style={headerStyle.txtMonth}>
             {buttonSelected != 2
               ? null
-              : daysOfWeek[currentDay] + "" + currentDate}
+              : daysOfWeek[currentDay] + " " + currentDate}
           </Text>
         </View>
       </View>

@@ -6,7 +6,10 @@ import { COLORS, SIZES, FONTS, STRUCTURE } from "../constants/theme.js";
 
 const SettingsScreen = ({ navigation }) => {
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView>
+            <View style={STRUCTURE.rowVertical}>
+
+            </View>
             <View style={STRUCTURE.rowVertical}>
                 <View style={styleSettings.danger}>
                     <View style={styleSettings.block}>
@@ -16,10 +19,11 @@ const SettingsScreen = ({ navigation }) => {
                         <Text style={styleSettings.subHeading}>Estas seguro que quieres eliminar toda la data ? There's no turning back</Text>
                     </View>
                     <View style={styleSettings.block}>
-                        <TouchableOpacity  style={styleSettings.btnDelete} onPress={() => {
-                            async () => {
-                                AsyncStorage.clear();
-                            }
+                        <TouchableOpacity style={styleSettings.btnDelete} onPress={async () => {
+
+                            AsyncStorage.clear();
+                            console.log("limpiando ");
+
                         }} ><Text style={styleSettings.txtSubmit}>Wipe Data</Text>
                         </TouchableOpacity>
                     </View>
@@ -40,7 +44,7 @@ const SettingsScreen = ({ navigation }) => {
 
             </View>
             <View style={STRUCTURE.rowVertical}>
-                
+
             </View>
         </SafeAreaView>
     );

@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import FormInform from "./FormInform";
+import FormInform from "../components/FormInform";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const InformScreen = ({ navigation }) => {
