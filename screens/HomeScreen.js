@@ -6,6 +6,7 @@ import Entypo from "react-native-vector-icons/Entypo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {COLORS,SIZES,FONTS,STRUCTURE} from "../constants/theme.js";
 
 const HomeScreen = ({ navigation }) => {
   const daysOfWeek = [
@@ -74,98 +75,94 @@ const HomeScreen = ({ navigation }) => {
       <View style={mainStyle.wrapperHeader}>
         <View style={mainStyle.header}>
           <Text style={headerStyle.txtDay}>
-            {daysOfWeek[currentDay]} {currentDate}
+            {monthsOfYear[currentMonth]} del {currentYear}
           </Text>
           <Text style={headerStyle.txtMonth}>
-            de {monthsOfYear[currentMonth]} del {currentYear}
+            {buttonSelected != 2
+              ? null
+              : daysOfWeek[currentDay] + "" + currentDate}
           </Text>
         </View>
       </View>
       <View style={mainStyle.main}>
         {/* begins month buttons */}
-        <View style={mainStyle.row}>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                const xmonth = currentMonth - 2;
-                if (xmonth === -1) {
-                  setCurrentYear(new Date().getFullYear() - 1);
-                  setCurrentMonth(11);
-                } else if (xmonth === -2) {
-                  setCurrentYear(new Date().getFullYear() - 1);
-                  setCurrentMonth(10);
-                } else {
-                  setCurrentYear(new Date().getFullYear());
-                  setCurrentMonth(new Date().getMonth() - 2);
-                }
-                loadWrapUpInform();
-                setButtonSelected(0);
-              }}
-              style={[
-                bodyStyle.btnMonth,
-                {
-                  backgroundColor: buttonSelected === 0 ? "#7540EE" : "#F0F0F6",
-                },
-              ]}
-            >
-              <Text
-                style={{ color: buttonSelected === 0 ? "#ffffff" : "#7540EE" }}
-              >
-                {monthsOfYear[new Date().getMonth() - 2]}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                const xmonth = currentMonth - 1;
-                if (xmonth == -1) {
-                  setCurrentYear(new Date().getFullYear() - 1);
-                } else {
-                  setCurrentYear(new Date().getFullYear());
-                }
-                setCurrentMonth(new Date().getMonth() - 1);
-                loadWrapUpInform();
-                setButtonSelected(1);
-              }}
-              style={bodyStyle.btnMonth}
-              style={[
-                bodyStyle.btnMonth,
-                {
-                  backgroundColor: buttonSelected === 1 ? "#7540EE" : "#F0F0F6",
-                },
-              ]}
-            >
-              <Text
-                style={{ color: buttonSelected === 1 ? "#ffffff" : "#7540EE" }}
-              >
-                {monthsOfYear[new Date().getMonth() - 1]}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
+        <View style={STRUCTURE.rowHorizontal}>
+          <TouchableOpacity
+            onPress={() => {
+              const xmonth = currentMonth - 2;
+              if (xmonth === -1) {
+                setCurrentYear(new Date().getFullYear() - 1);
+                setCurrentMonth(11);
+              } else if (xmonth === -2) {
+                setCurrentYear(new Date().getFullYear() - 1);
+                setCurrentMonth(10);
+              } else {
                 setCurrentYear(new Date().getFullYear());
-                setCurrentMonth(new Date().getMonth());
-                loadWrapUpInform();
-                setButtonSelected(2);
-              }}
-              style={bodyStyle.btnMonth}
-              style={[
-                bodyStyle.btnMonth,
-                {
-                  backgroundColor: buttonSelected === 2 ? "#7540EE" : "#F0F0F6",
-                },
-              ]}
+                setCurrentMonth(new Date().getMonth() - 2);
+              }
+              loadWrapUpInform();
+              setButtonSelected(0);
+            }}
+            style={[
+              bodyStyle.btnMonth,
+              {
+                backgroundColor: buttonSelected === 0 ? "#7540EE" : "#F0F0F6",
+              },
+            ]}
+          >
+            <Text
+              style={{ color: buttonSelected === 0 ? "#ffffff" : "#7540EE" ,fontSize:19}}
             >
-              <Text
-                style={{ color: buttonSelected === 2 ? "#ffffff" : "#7540EE" }}
-              >
-                {monthsOfYear[new Date().getMonth()]}
-              </Text>
-            </TouchableOpacity>
-          </View>
+              {monthsOfYear[new Date().getMonth() - 2]}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              const xmonth = currentMonth - 1;
+              if (xmonth == -1) {
+                setCurrentYear(new Date().getFullYear() - 1);
+              } else {
+                setCurrentYear(new Date().getFullYear());
+              }
+              setCurrentMonth(new Date().getMonth() - 1);
+              loadWrapUpInform();
+              setButtonSelected(1);
+            }}
+            style={[
+              bodyStyle.btnMonth,
+              {
+                backgroundColor: buttonSelected === 1 ? "#7540EE" : "#F0F0F6",
+              },
+            ]}
+          >
+            <Text
+              style={{ color: buttonSelected === 1 ? "#ffffff" : "#7540EE",fontSize:19 }}
+            >
+              {monthsOfYear[new Date().getMonth() - 1]}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              setCurrentYear(new Date().getFullYear());
+              setCurrentMonth(new Date().getMonth());
+              loadWrapUpInform();
+              setButtonSelected(2);
+            }}
+            style={[
+              bodyStyle.btnMonth,
+              {
+                backgroundColor: buttonSelected === 2 ? "#7540EE" : "#F0F0F6",
+              },
+            ]}
+          >
+            <Text
+              style={{ color: buttonSelected === 2 ? "#ffffff" : "#7540EE",fontSize:19 }}
+            >
+              {monthsOfYear[new Date().getMonth()]}
+            </Text>
+          </TouchableOpacity>
         </View>
         {/* begins wrap-up inform */}
         <View style={mainStyle.rowHorizontal}>
@@ -241,30 +238,32 @@ const mainStyle = StyleSheet.create({
   },
   row: { flexDirection: "row", justifyContent: "space-between", width: "100%" },
   rowHorizontal: {
-    flexDirection: "colum",
+    flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
   },
 });
 const headerStyle = StyleSheet.create({
-  txtDay: { fontSize: 40, fontWeight: "bold", textAlign: "center" },
-  txtMonth: { fontSize: 30, textAlign: "center" },
+  txtDay: { fontSize: 40, fontWeight: "bold", textAlign: "center",color:'white' },
+  txtMonth: { fontSize: 30, textAlign: "center",color:'white' },
 });
 const bodyStyle = StyleSheet.create({
   btnMonth: {
     flex: 1,
     marginHorizontal: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingVertical: 20,
     marginVertical: 10,
     borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 20,
   },
   viewWrapUp: { flex: 3, backgroundColor: "white", padding: 7 },
   elInform: {
     height: 150,
     width: "45%",
-    borderColor: "#7540EE",
+    borderColor: COLORS.primary,
     borderWidth: 1,
     borderRadius: 15,
     padding: 10,

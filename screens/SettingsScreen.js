@@ -1,60 +1,52 @@
 import React from 'react';
-import { View, Text, Pressable, StyleSheet,Button } from 'react-native'
+import { View, Text, Pressable, StyleSheet, Button, TouchableOpacity } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { COLORS, SIZES, FONTS, STRUCTURE } from "../constants/theme.js";
 
 const SettingsScreen = ({ navigation }) => {
     return (
-        <SafeAreaView >
-            <View style={styleSettings.container}>
-
-                <View style={styleSettings.child}>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={STRUCTURE.rowVertical}>
+                <View style={styleSettings.danger}>
                     <View style={styleSettings.block}>
-                        <Text style={styleSettings.heading}>Danger Zone</Text>
+                        <Text style={styleSettings.headingDanger}>Danger Zone</Text>
                     </View>
-                    <View style={styleSettings.danger}>
-                        <View style={styleSettings.block}>
-                            <Text style={styleSettings.subHeading}>Estas seguro que quieres eliminar toda la data ? There's no turning back</Text>
-                        </View>
-                        <View style={styleSettings.block}>
-                            <Pressable onPressIn={() => {
-                                async () => {
-                                    AsyncStorage.clear();
-                                }
-                            }} >
-                                <View style={styleSettings.btnSubmit}><Text style={styleSettings.txtSubmit}>Wipe Data</Text></View>
-                            </Pressable>
-                        </View>
+                    <View style={styleSettings.block}>
+                        <Text style={styleSettings.subHeading}>Estas seguro que quieres eliminar toda la data ? There's no turning back</Text>
                     </View>
-
-                </View>
-                <View style={styleSettings.child}>
-                    <Pressable onPressIn={() => {
-                        async () => {
-                            await AsyncStorage.clear();
-                        }
-                    }} >
-                        <View style={styleSettings.btnSubmit}><Text style={styleSettings.txtSubmit}>Wipe Data</Text></View>
-                    </Pressable>
-                    <Button
-                        onPress={() => {
+                    <View style={styleSettings.block}>
+                        <TouchableOpacity  style={styleSettings.btnDelete} onPress={() => {
                             async () => {
                                 AsyncStorage.clear();
                             }
-                        }} title="gfg"></Button>
+                        }} ><Text style={styleSettings.txtSubmit}>Wipe Data</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styleSettings.block}>
+                        <Text style={styleSettings.subHeading}>Estas a punto de editar tu informe</Text>
+                    </View>
+                    <View>
+                        <TouchableOpacity
+                            style={[styleSettings.btnDelete]}
+                            onPress={() => {
+                                navigation.navigate('EditInformScreen')
+                            }}
+                        >
+                            <Text>Edit Inform</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
-
             </View>
-
-
+            <View style={STRUCTURE.rowVertical}>
+                
+            </View>
         </SafeAreaView>
     );
 }
 const styleSettings = StyleSheet.create({
-    container: { padding: 20 },
-
-    child: {},
+    headingDanger: { color: "red", textAlign: 'center', fontSize: 23 },
     block: { paddingVertical: 10 },
 
     heading: { fontSize: 21 },
@@ -72,9 +64,18 @@ const styleSettings = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    txtSubmit: {
-        fontSize: 19,
-        color: '#FFFFFF'
-    }
+    btnDelete: {
+        height: 65,
+        backgroundColor: "#F7102C",
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: "center",
+        marginHorizontal: 10,
+    },
+    textSubmit: {
+        fontSize: 18,
+        color: "#FFFFFF",
+        fontWeight: "bold",
+    },
 });
 export default SettingsScreen;
