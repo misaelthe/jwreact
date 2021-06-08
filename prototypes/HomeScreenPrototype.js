@@ -27,45 +27,117 @@ const HomeScreen = ({ navigation }) => {
     "Julio",
   ];
 
-  const [currentTiempo, setCurrentTiempo] = useState("0 : 0");
-  const [currentVideos, setCurrentVideos] = useState(0);
-  const [currentRevisitas, setCurrentRevisitas] = useState(0);
-  const [currentEstudios, setCurrentEstudios] = useState(0);
-  const [currentDate, setCurrentDate] = useState(new Date().getDate());
-  const [currentDay, setCurrentDay] = useState(new Date().getDay());
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [wrapUpInform, setWrapUpInform] = useState([
+    { horas: 0, minutos: 0, videos: 0, revisitas: 0, estudios: 0 },
+  ]);
+  const [currentDate, setCurrentDate] = useState(-1);
+  const [currentDay, setCurrentDay] = useState(-1);
+  const [currentMonth, setCurrentMonth] = useState(-1);
+  const [currentYear, setCurrentYear] = useState(-1);
   const [buttonSelected, setButtonSelected] = useState(2);
+  const refVariable = useRef(0);
 
   useFocusEffect(
     React.useCallback(() => {
-      loadWrapUpInform();
+      setMonthBar();
+      reduceRegisters();
+      loadWrapUpInform(new Date().getMonth());
+      return () => (refVariable.current = 0);
     })
   );
-  const loadWrapUpInform = async () => {
-    let keyFormatted = currentYear + "." + currentMonth;
-    let val = await AsyncStorage.getItem(keyFormatted);
-    if (val != null) {
-      let tTiempo = JSON.parse(val).tiempo;
-      let tVideos = Number.parseInt(JSON.parse(val).videos, 10);
-      let tRevisitas = Number.parseInt(JSON.parse(val).revisitas, 10);
-      let tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
-      if (
-        currentTiempo !== tTiempo ||
-        currentVideos != tVideos ||
-        currentRevisitas != tRevisitas ||
-        currentEstudios != tEstudios
-      ) {
-        setCurrentTiempo(tTiempo);
-        setCurrentVideos(tVideos);
-        setCurrentRevisitas(tRevisitas);
-        setCurrentEstudios(tEstudios);
+  /* Inicializes date params */
+  const setMonthBar = () => {
+    if (new Date().getDate() !== currentDate) {
+      setCurrentDate(new Date().getDate());
+    }
+    if (new Date().getDay() !== currentDay) {
+      setCurrentDay(new Date().getDay());
+    }
+    if (new Date().getMonth() !== currentMonth) {
+      setCurrentMonth(new Date().getMonth());
+    }
+    if (new Date().getFullYear() !== currentYear) {
+      setCurrentYear(new Date().getFullYear());
+    }
+  };
+  const reduceRegisters=()=>{
+    let keyFmtdYearMonth = currentYear + "." + (currentMonth) + ".";
+      let tHoras = 0;
+      let tVideos = 0;
+      let tRevisitas = 0;
+      let tEstudios = 0;
+      let tMinutos = 0;
+      for (let i = 1; i <= currentDate; i++) {
+        let keyFmtdYearMonthDay = keyFmtdYearMonth + i + ".";
+        for (let j = 1; j < 20; j++) {
+          let val = await AsyncStorage.getItem(keyFmtdYearMonthDay + j);
+          if (val == null) {
+            break;
+          } else {
+            tHoras += Number.parseInt(JSON.parse(val).horas, 10);
+            tMinutos += Number.parseInt(JSON.parse(val).minutos, 10);
+            tVideos += Number.parseInt(JSON.parse(val).videos, 10);
+            tRevisitas += Number.parseInt(JSON.parse(val).revisitas, 10);
+            tEstudios += Number.parseInt(JSON.parse(val).estudios, 10);
+          }
+        }
       }
-    } else {
-      setCurrentTiempo("0 : 0");
-      setCurrentVideos(0);
-      setCurrentRevisitas(0);
-      setCurrentEstudios(0);
+  }
+  const loadWrapUpInform = async (month) => {
+    if (refVariable.current == 0) {
+      /* new Date(2021, 0, 0).getDate() */
+      let keyFmtdYearMonth = currentYear + "." + month + ".";
+      let tHoras = 0;
+      let tVideos = 0;
+      let tRevisitas = 0;
+      let tEstudios = 0;
+      let tMinutos = 0;
+      let booInform = -1;
+      for (let i = 1; i <= currentDate; i++) {
+        let keyFmtdYearMonthDay = keyFmtdYearMonth + i + ".";
+        for (let j = 1; j < 20; j++) {
+          console.log(keyFmtdYearMonthDay + j);
+          let val = await AsyncStorage.getItem(keyFmtdYearMonthDay + j);
+          if (val == null) {
+            break;
+          } else {
+            tHoras += Number.parseInt(JSON.parse(val).horas, 10);
+            tMinutos += Number.parseInt(JSON.parse(val).minutos, 10);
+            tVideos += Number.parseInt(JSON.parse(val).videos, 10);
+            tRevisitas += Number.parseInt(JSON.parse(val).revisitas, 10);
+            tEstudios += Number.parseInt(JSON.parse(val).estudios, 10);
+          }
+        }
+      }
+      tHoras += Number.parseInt(tMinutos / 60);
+      tMinutos = tMinutos % 60;
+      booInform = wrapUpInform.map((el) => {
+        console.log(el.horas + " " + tHoras);
+        if (
+          el.horas != tHoras ||
+          el.minutos != tMinutos ||
+          el.videos != tVideos ||
+          el.revisitas != tRevisitas ||
+          el.estudios != tEstudios
+        )
+          return -1;
+        else {
+          return 0;
+        }
+      });
+      if (booInform == -1) {
+        console.log("essssssto");
+        setWrapUpInform([
+          {
+            horas: tHoras,
+            minutos: tMinutos,
+            videos: tVideos,
+            revisitas: tRevisitas,
+            estudios: tEstudios,
+          },
+        ]);
+      }
+      refVariable.current = -1;
     }
   };
 
@@ -87,19 +159,15 @@ const HomeScreen = ({ navigation }) => {
           <View>
             <TouchableOpacity
               onPress={() => {
+                setButtonSelected(0);
                 const xmonth = currentMonth - 2;
                 if (xmonth === -1) {
-                  setCurrentYear(new Date().getFullYear() - 1);
-                  setCurrentMonth(11);
+                  loadWrapUpInform(11);
                 } else if (xmonth === -2) {
-                  setCurrentYear(new Date().getFullYear() - 1);
-                  setCurrentMonth(10);
+                  loadWrapUpInform(10);
                 } else {
-                  setCurrentYear(new Date().getFullYear());
-                  setCurrentMonth(new Date().getMonth() - 2);
+                  loadWrapUpInform(currentMonth);
                 }
-                loadWrapUpInform();
-                setButtonSelected(0);
               }}
               style={[
                 bodyStyle.btnMonth,
@@ -111,22 +179,20 @@ const HomeScreen = ({ navigation }) => {
               <Text
                 style={{ color: buttonSelected === 0 ? "#ffffff" : "#7540EE" }}
               >
-                {monthsOfYear[new Date().getMonth() - 2]}
+                {monthsOfYear[currentMonth - 2]}
               </Text>
             </TouchableOpacity>
           </View>
           <View>
             <TouchableOpacity
               onPress={() => {
-                const xmonth = currentMonth - 1;
-                if (xmonth == -1) {
-                  setCurrentYear(new Date().getFullYear() - 1);
-                } else {
-                  setCurrentYear(new Date().getFullYear());
-                }
-                setCurrentMonth(new Date().getMonth() - 1);
-                loadWrapUpInform();
                 setButtonSelected(1);
+                const xmonth = currentMonth - 1;
+                if (xmonth === -1) {
+                  loadWrapUpInform(11);
+                } else {
+                  loadWrapUpInform(currentMonth);
+                }
               }}
               style={bodyStyle.btnMonth}
               style={[
@@ -139,17 +205,15 @@ const HomeScreen = ({ navigation }) => {
               <Text
                 style={{ color: buttonSelected === 1 ? "#ffffff" : "#7540EE" }}
               >
-                {monthsOfYear[new Date().getMonth() - 1]}
+                {monthsOfYear[currentMonth - 1]}
               </Text>
             </TouchableOpacity>
           </View>
           <View>
             <TouchableOpacity
               onPress={() => {
-                setCurrentYear(new Date().getFullYear());
-                setCurrentMonth(new Date().getMonth());
-                loadWrapUpInform();
                 setButtonSelected(2);
+                loadWrapUpInform(currentMonth);
               }}
               style={bodyStyle.btnMonth}
               style={[
@@ -162,7 +226,7 @@ const HomeScreen = ({ navigation }) => {
               <Text
                 style={{ color: buttonSelected === 2 ? "#ffffff" : "#7540EE" }}
               >
-                {monthsOfYear[new Date().getMonth()]}
+                {monthsOfYear[currentMonth]}
               </Text>
             </TouchableOpacity>
           </View>
@@ -176,7 +240,15 @@ const HomeScreen = ({ navigation }) => {
                 <IconFeather name="clock" size={40} />
               </View>
               <View>
-                <Text style={bodyStyle.txtDescription}>{currentTiempo}</Text>
+                <Text style={bodyStyle.txtDescription}>
+                  {wrapUpInform.map((el) => {
+                    return el.horas;
+                  })}
+                  :
+                  {wrapUpInform.map((el) => {
+                    return el.minutos;
+                  })}
+                </Text>
               </View>
             </View>
             <View style={bodyStyle.elInform}>
@@ -184,7 +256,11 @@ const HomeScreen = ({ navigation }) => {
                 <Entypo name="folder-video" size={40} />
               </View>
               <View>
-                <Text style={bodyStyle.txtDescription}>{currentVideos}</Text>
+                <Text style={bodyStyle.txtDescription}>
+                  {wrapUpInform.map((el) => {
+                    return el.videos;
+                  })}
+                </Text>
               </View>
             </View>
           </View>
@@ -198,7 +274,9 @@ const HomeScreen = ({ navigation }) => {
                 </View>
                 <View>
                   <Text style={bodyStyle.txtDescription}>
-                    {currentRevisitas}
+                    {wrapUpInform.map((el) => {
+                      return el.revisitas;
+                    })}
                   </Text>
                 </View>
               </View>
@@ -208,7 +286,9 @@ const HomeScreen = ({ navigation }) => {
                 </View>
                 <View>
                   <Text style={bodyStyle.txtDescription}>
-                    {currentEstudios}
+                    {wrapUpInform.map((el) => {
+                      return el.estudios;
+                    })}
                   </Text>
                 </View>
               </View>

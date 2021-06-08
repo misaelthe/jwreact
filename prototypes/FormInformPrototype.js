@@ -21,32 +21,21 @@ const FormInform = ({ navigation }) => {
   const nameRegex = new RegExp(/^[1-9]+$/i);
 
   const registerInform = async (obj) => {
-    const keyFormatted = new Date().getFullYear() + "." + new Date().getMonth();
-    const val = await AsyncStorage.getItem(keyFormatted);
-    if (val == null) {
-      const newObj = {
-        tiempo: obj.horas + " : " + obj.minutos,
-        videos: obj.videos,
-        revisitas: obj.revisitas,
-        estudios: obj.estudios,
-      };
-      await AsyncStorage.setItem(keyFormatted, JSON.stringify(newObj));
-    } else {
-      const tTiempo = JSON.parse(val).tiempo.split(":");
-      const tHoras = Number.parseInt(tTiempo[0], 10);
-      const tMinutos = Number.parseInt(tTiempo[1], 10);
-      const tVideos = Number.parseInt(JSON.parse(val).videos, 10);
-      const tRevisitas = Number.parseInt(JSON.parse(val).revisitas, 10);
-      const tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
-
-      const newObj = {
-        tiempo: tHoras + obj.horas + " : " + (tMinutos + obj.minutos),
-        videos: tVideos + obj.videos,
-        revisitas: tRevisitas + obj.revisitas,
-        estudios: tEstudios + obj.estudios,
-      };
-      await AsyncStorage.setItem(keyFormatted, JSON.stringify(newObj));
+    const keyFormatted =
+      new Date().getFullYear() +
+      "." +
+      new Date().getMonth() +
+      "." +
+      new Date().getDate() +
+      ".";
+    let counter = 1;
+    for (; ; counter++) {
+      let val = await AsyncStorage.getItem(keyFormatted + counter);
+      if (val == null) {
+        break;
+      }
     }
+    await AsyncStorage.setItem(keyFormatted + counter, JSON.stringify(obj));
   };
   const validate = async () => {
     let daysSoFar = new Date().getDate();
@@ -141,16 +130,16 @@ const FormInform = ({ navigation }) => {
         </View>
       </View>
 
-      <View>
-        <Text style={formStyles.textInput}>Videos</Text>
-        <TextInput
-          style={formStyles.input}
-          keyboardType="numeric"
-          value={videos}
-          onChangeText={(txt) => setVideos(txt)}
-        />
-      </View>
-
+        <View >
+          <Text style={formStyles.textInput}>Videos</Text>
+          <TextInput
+            style={formStyles.input}
+            keyboardType="numeric"
+            value={videos}
+            onChangeText={(txt) => setVideos(txt)}
+          />
+        </View>
+      
       <View>
         <Text style={formStyles.textInput}>Revisitas</Text>
         <TextInput
@@ -174,9 +163,9 @@ const FormInform = ({ navigation }) => {
           <Text style={formStyles.textError}>{errorForm}</Text>
         ) : null}
       </View>
-      <View style={[formStyles.row, { marginVertical: 15 }]}>
+      <View style={[formStyles.row,{marginVertical:15}]}>
         <TouchableOpacity
-          style={[{ flex: 5 }, formStyles.btnClasic]}
+          style={[{flex:5}, formStyles.btnClasic]}
           onPress={() => {
             validate();
           }}
@@ -184,7 +173,7 @@ const FormInform = ({ navigation }) => {
           <Text style={formStyles.textSubmit}>Enviar</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[{ flex: 1 }, formStyles.btnClasic]}
+          style={[{flex:1}, formStyles.btnClasic]}
           onPress={() => {
             clearForm();
           }}
@@ -192,6 +181,7 @@ const FormInform = ({ navigation }) => {
           <Entypo name="trash" size={35} color="#ffffff" />
         </TouchableOpacity>
       </View>
+      
     </View>
   );
 };
@@ -202,7 +192,7 @@ const formStyles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    flex: 1,
+    flex: 1
   },
   containerInputTime: {
     width: "45%",
