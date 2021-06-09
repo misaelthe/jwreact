@@ -1,7 +1,8 @@
 # My JWREACT
 ![06-05-2021AD](/assets/screenshots/06-05-2021AD.png)
 ### Pending tasks
-- [ ]change hours
+- [ ] Change hours
+- [ ] Delete month informs prior to last 3 months
 
 ### 1.0.8
 * New logic brought to my programme

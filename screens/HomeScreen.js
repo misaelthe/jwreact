@@ -86,7 +86,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <View style={mainStyle.main}>
         {/* begins month buttons */}
-        <View style={STRUCTURE.rowHorizontal}>
+        <View style={STRUCTURE.rowVertical}>
           <TouchableOpacity
             onPress={() => {
               const xmonth = currentMonth - 2;

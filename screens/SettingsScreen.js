@@ -6,27 +6,52 @@ import { COLORS, SIZES, FONTS, STRUCTURE } from "../constants/theme.js";
 
 const SettingsScreen = ({ navigation }) => {
     return (
-        <SafeAreaView>
-            <View style={STRUCTURE.rowVertical}>
-
+        <SafeAreaView style={{ backgroundColor: COLORS.tertiary }}>
+            <View style={[STRUCTURE.rowHorizontal, { padding: SIZES.min }]}>
+                <Text style={FONTS.subHeading}>Reglas del Aplicativo</Text>
             </View>
-            <View style={STRUCTURE.rowVertical}>
-                <View style={styleSettings.danger}>
-                    <View style={styleSettings.block}>
-                        <Text style={styleSettings.headingDanger}>Danger Zone</Text>
+            <View style={[STRUCTURE.rowHorizontal, STRUCTURE.viewRounded, { backgroundColor: COLORS.white, marginHorizontal: SIZES.min }]}>
+                <View style={[STRUCTURE.rowHorizontal, STRUCTURE.rowSettings]}>
+                    <View style={STRUCTURE.rowHorizontal}>
+                        <Text style={FONTS.subHeading2}>Almacenamiento de Informes</Text>
                     </View>
-                    <View style={styleSettings.block}>
-                        <Text style={styleSettings.subHeading}>Estas seguro que quieres eliminar toda la data ? There's no turning back</Text>
+                    <View style={STRUCTURE.rowHorizontal}>
+                        <Text style={FONTS.text}>Informes de 3 meses atras seran eliminados de forma permanente, keep that in mind.</Text>
                     </View>
-                    <View style={styleSettings.block}>
+                </View>
+                <View style={[STRUCTURE.rowHorizontal, STRUCTURE.rowSettings]}>
+                    <View style={STRUCTURE.rowHorizontal}>
+                        <Text style={FONTS.subHeading2}>Almacenamiento de los informes de los ultimos 3 meses</Text>
+                    </View>
+                    <View style={STRUCTURE.rowHorizontal}>
+                        <Text style={FONTS.text}>Informes de 3 meses atras seran eliminados de forma permanente, keep that in mind.</Text>
+                    </View>
+                </View>
+                <View style={[STRUCTURE.rowHorizontal, STRUCTURE.rowSettings]}>
+                    <View style={STRUCTURE.rowHorizontal}>
+                        <Text style={FONTS.subHeading2}>Almacenamiento de los informes de los ultimos 3 meses</Text>
+                    </View>
+                    <View style={STRUCTURE.rowHorizontal}>
+                        <Text style={FONTS.text}>Informes de 3 meses atras seran eliminados de forma permanente, keep that in mind.</Text>
+                    </View>
+                </View>
+            </View>
+            <View style={[STRUCTURE.rowHorizontal, { padding: SIZES.min }]}>
+                <Text style={[FONTS.subHeading, { color: COLORS.red }]}>Danger Zone</Text>
+            </View>
+            <View style={[STRUCTURE.rowHorizontal, STRUCTURE.viewRounded, { backgroundColor: COLORS.white, marginHorizontal: SIZES.min, borderColor: COLORS.red, borderWidth: 1 }]}>
+                <View style={[STRUCTURE.rowVertical, STRUCTURE.rowSettings]}>
+                    <View style={{width:"60%"}}>
+                        <Text style={FONTS.subHeading2}>Estas seguro que quieres eliminar toda la data ? There's no turning back</Text>
+                    </View>
+                    <View style={{width:"40%"}}>
                         <TouchableOpacity style={styleSettings.btnDelete} onPress={async () => {
-
                             AsyncStorage.clear();
-                            console.log("limpiando ");
-
                         }} ><Text style={styleSettings.txtSubmit}>Wipe Data</Text>
                         </TouchableOpacity>
                     </View>
+                </View>
+                <View style={styleSettings.danger}>
                     <View style={styleSettings.block}>
                         <Text style={styleSettings.subHeading}>Estas a punto de editar tu informe</Text>
                     </View>
@@ -51,8 +76,6 @@ const SettingsScreen = ({ navigation }) => {
 }
 const styleSettings = StyleSheet.create({
     headingDanger: { color: "red", textAlign: 'center', fontSize: 23 },
-    block: { paddingVertical: 10 },
-
     heading: { fontSize: 21 },
     danger: {
         borderWidth: 1,
