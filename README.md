@@ -4,6 +4,9 @@
 - [ ] Change hours
 - [ ] Delete month informs prior to last 3 months
 
+### 1.1.3
+* Design Changes in SettingsScreen
+* New vars added in Theme
 ### 1.0.8
 * New logic brought to my programme
 * state var inform in home splited into 4 state vars

@@ -6,7 +6,7 @@ export const COLORS = {
   secondary: "",
   tertiary: "#F0F0F6",
   white: "#FFFFFF",
-  red:"#FF0000"
+  red: "#FF0000",
 };
 export const SIZES = {
   radius: 15,
@@ -17,31 +17,37 @@ export const SIZES = {
 };
 export const FONTS = {
   subHeading: {
-    fontSize: 25, fontWeight: "bold"
+    fontSize: 25,
+    fontWeight: "bold",
   },
   subHeading2: {
-    fontSize: 18, fontWeight: "bold"
+    fontSize: 18,
+    fontWeight: "bold",
   },
   text: {
-    fontSize: 17, color: 'black'
-  }
+    fontSize: 17,
+    color: "black",
+  },
 };
 export const STRUCTURE = {
   rowVertical: {
-    flexDirection: "row", justifyContent: "space-between", width: "100%"
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flex:1
   },
   rowHorizontal: {
-    flexDirection: "column", justifyContent: "space-between", width: "100%"
+    flexDirection: "column",
+    justifyContent: "space-between",
+    flex:1
   },
   viewRounded: {
     borderRadius: SIZES.radius,
-    padding: 10
+    padding: SIZES.min,
   },
-  rowSettings: {
-    borderBottomColor: COLORS.tertiary,
-    borderBottomWidth: 1,
-    padding:15
-  }
+  contentCenteredVH: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
 };
 const appTheme = { COLORS, SIZES, FONTS, STRUCTURE };
 
