@@ -112,12 +112,12 @@ const SettingsScreen = ({ navigation }) => {
             },
           ]}
         >
-          <View style={[STRUCTURE.contentCenteredVH, { width: "60%" }]}>
+          <View style={[STRUCTURE.contentCenteredVH, { flex: 3 }]}>
             <Text style={[FONTS.subHeading2, { color: COLORS.red }]}>
               Seguro que quieres eliminar every inform? There's no turning back
             </Text>
           </View>
-          <View style={{ width: "40%" }}>
+          <View style={{ flex:2 }}>
             <TouchableOpacity
               style={[styleSettings.btnDelete, STRUCTURE.contentCenteredVH]}
               onPress={async () => {
@@ -131,16 +131,16 @@ const SettingsScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={[STRUCTURE.rowVertical, { padding: SIZES.min }]}>
-          <View style={[STRUCTURE.contentCenteredVH, { width: "60%" }]}>
+          <View style={[STRUCTURE.contentCenteredVH, { flex: 3 }]}>
             <Text style={[FONTS.subHeading2, { color: COLORS.red }]}>
               A punto de modificar your inform
             </Text>
           </View>
-          <View style={{ width: "40%" }}>
+          <View style={{ flex: 2 }}>
             <TouchableOpacity
               style={[styleSettings.btnDelete, STRUCTURE.contentCenteredVH]}
               onPress={async () => {
-                navigation.navigate("EditInformScreen");
+                navigation.navigate("EditInformScreen",{navigation:navigation});
               }}
             >
               <Text style={[FONTS.subHeading2, { color: COLORS.white }]}>
@@ -155,22 +155,6 @@ const SettingsScreen = ({ navigation }) => {
   );
 };
 const styleSettings = StyleSheet.create({
-  headingDanger: { color: "red", textAlign: "center", fontSize: 23 },
-  heading: { fontSize: 21 },
-  danger: {
-    borderWidth: 1,
-    borderColor: "red",
-    borderRadius: 15,
-    padding: 15,
-  },
-  subHeading: { fontSize: 17, textAlign: "center" },
-  btnSubmit: {
-    padding: 15,
-    borderRadius: 15,
-    backgroundColor: "#FE0000",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   btnDelete: {
     height: 65,
     backgroundColor: "#F7102C",
@@ -179,10 +163,6 @@ const styleSettings = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 10,
   },
-  textSubmit: {
-    fontSize: 18,
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },
+
 });
 export default SettingsScreen;

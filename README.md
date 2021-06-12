@@ -4,6 +4,8 @@
 - [ ] Change hours
 - [ ] Delete month informs prior to last 3 months
 
+### 1.2
+* Back Button added to head to Settings
 ### 1.1.3
 * Design Changes in SettingsScreen
 * New vars added in Theme
