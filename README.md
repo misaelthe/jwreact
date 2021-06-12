@@ -4,6 +4,9 @@
 - [ ] Change hours
 - [ ] Delete month informs prior to last 3 months
 
+### 1.2.1
+* Header Bar completed
+* EditFormInform created
 ### 1.2
 * Back Button added to head to Settings
 ### 1.1.3

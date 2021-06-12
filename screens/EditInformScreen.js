@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, SafeAreaView } from "react-native";
 import HeaderBar from "../components/HeaderBar";
-
+import EditFormInform from "../components/EditFormInform";
 const EditInformScreen = ({navigation}) => {
   return (
     <SafeAreaView>
@@ -9,10 +9,7 @@ const EditInformScreen = ({navigation}) => {
         <HeaderBar navigation={navigation}/>
       </View>
       <View>
-        <Text>dfdWWWWWWWWWWW</Text>
-        <Text>dfdWWWWWWWWWWW</Text>
-        <Text>dfdWWWWWWWWWWW</Text>
-        <Text>dfdWWWWWWWWWWW</Text>
+        <EditFormInform navigation={navigation}/>
       </View>
     </SafeAreaView>
   );
