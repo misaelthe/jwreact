@@ -1,16 +1,18 @@
 import React from "react";
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, ScrollView } from "react-native";
 import HeaderBar from "../components/HeaderBar";
 import EditFormInform from "../components/EditFormInform";
-const EditInformScreen = ({navigation}) => {
+import { SIZES } from "../constants/theme.js";
+
+const EditInformScreen = ({ navigation }) => {
   return (
     <SafeAreaView>
       <View>
-        <HeaderBar navigation={navigation}/>
+        <HeaderBar navigation={navigation} />
       </View>
-      <View>
-        <EditFormInform navigation={navigation}/>
-      </View>
+      <ScrollView style={{ padding: SIZES.min }}>
+        <EditFormInform navigation={navigation} />
+      </ScrollView>
     </SafeAreaView>
   );
 };

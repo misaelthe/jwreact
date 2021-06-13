@@ -4,11 +4,10 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Pressable,
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Entypo from "react-native-vector-icons/Entypo";
+import { COLORS, SIZES, FONTS, STRUCTURE } from "../constants/theme.js";
 
 const EditFormInform = ({ navigation }) => {
   const [validated, setValidated] = useState(0);
@@ -111,9 +110,9 @@ const EditFormInform = ({ navigation }) => {
     setEstudios("");
   };
   return (
-    <View style={formStyles.container}>
-      <View style={formStyles.row}>
-        <View style={formStyles.containerInputTime}>
+    <View>
+      <View style={STRUCTURE.rowVertical}>
+        <View style={STRUCTURE.rowHorizontal}>
           <Text style={formStyles.textInput}>Horas</Text>
           <TextInput
             style={formStyles.input}
@@ -130,7 +129,7 @@ const EditFormInform = ({ navigation }) => {
             }}
           />
         </View>
-        <View style={formStyles.containerInputTime}>
+        <View style={STRUCTURE.rowHorizontal}>
           <Text style={formStyles.textInput}>Minutos</Text>
           <TextInput
             style={formStyles.input}
@@ -141,7 +140,7 @@ const EditFormInform = ({ navigation }) => {
         </View>
       </View>
 
-      <View>
+      <View style={STRUCTURE.rowHorizontal}>
         <Text style={formStyles.textInput}>Videos</Text>
         <TextInput
           style={formStyles.input}
@@ -151,7 +150,7 @@ const EditFormInform = ({ navigation }) => {
         />
       </View>
 
-      <View>
+      <View style={STRUCTURE.rowHorizontal}>
         <Text style={formStyles.textInput}>Revisitas</Text>
         <TextInput
           style={formStyles.input}
@@ -160,7 +159,7 @@ const EditFormInform = ({ navigation }) => {
           onChangeText={(txt) => setRevisitas(txt)}
         />
       </View>
-      <View>
+      <View style={STRUCTURE.rowHorizontal}>
         <Text style={formStyles.textInput}>Estudios</Text>
         <TextInput
           style={formStyles.input}
@@ -169,12 +168,12 @@ const EditFormInform = ({ navigation }) => {
           onChangeText={(txt) => setEstudios(txt)}
         />
       </View>
-      <View>
+      <View style={STRUCTURE.rowHorizontal}>
         {validated == -1 ? (
           <Text style={formStyles.textError}>{errorForm}</Text>
         ) : null}
       </View>
-      <View style={[formStyles.row, { marginVertical: 15 }]}>
+      <View style={[STRUCTURE.rowHorizontal, { marginVertical: 15 }]}>
         <TouchableOpacity
           style={[{ flex: 5 }, formStyles.btnClasic]}
           onPress={() => {
@@ -195,9 +194,6 @@ const formStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
-  },
-  containerInputTime: {
-    width: "45%",
   },
   textInput: {
     fontSize: 18,
