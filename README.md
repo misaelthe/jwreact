@@ -1,5 +1,6 @@
 # My JWREACT
-![06-05-2021AD](/assets/screenshots/06-05-2021AD.png)
+![13.1-06-2021](/assets/screenshots/13.1-06-2021.jpeg)
+![13.2-06-2021](/assets/screenshots/13.2-06-2021.jpeg)
 ### Pending tasks
 - [ ] Change hours
 - [ ] Delete month informs prior to last 3 months

@@ -71,8 +71,8 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ backgroundColor: COLORS.primary, flex: 1 }}>
+    <SafeAreaView style={{ flex: 1,backgroundColor: COLORS.primary }}>
+      <View style={{flex: 1 }}>
         <View style={mainStyle.wrapperHeader}>
           <View style={mainStyle.header}>
             <Text style={headerStyle.txtDay}>
@@ -221,7 +221,6 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const mainStyle = StyleSheet.create({
-  container: { backgroundColor: "#7540EE", flex: 1 },
   wrapperHeader: { flex: 2, backgroundColor: "#F0F0F6" },
   header: {
     borderBottomRightRadius: 50,
