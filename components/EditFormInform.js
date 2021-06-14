@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -6,48 +6,69 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS, SIZES, FONTS, STRUCTURE } from "../constants/theme.js";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const EditFormInform = ({ navigation }) => {
   const [validated, setValidated] = useState(0);
+  const nameRegex = new RegExp(/^[1-9]+$/i);
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [horas, setHoras] = useState("");
   const [minutos, setMinutos] = useState("");
   const [videos, setVideos] = useState("");
   const [revisitas, setRevisitas] = useState("");
   const [estudios, setEstudios] = useState("");
   const [errorForm, setErrorForm] = useState("");
-  const nameRegex = new RegExp(/^[1-9]+$/i);
+  const originalHoras = useRef(null);
+  const originalMinutos = useRef(null);
+  const originalVideos = useRef(null);
+  const originalRevisitas = useRef(null);
+  const originalEstudios = useRef(null);
 
-  const registerInform = async (obj) => {
-    const keyFormatted = new Date().getFullYear() + "." + new Date().getMonth();
-    const val = await AsyncStorage.getItem(keyFormatted);
-    if (val == null) {
-      const newObj = {
-        tiempo: obj.horas + " : " + obj.minutos,
-        videos: obj.videos,
-        revisitas: obj.revisitas,
-        estudios: obj.estudios,
-      };
-      await AsyncStorage.setItem(keyFormatted, JSON.stringify(newObj));
+  useFocusEffect(
+    React.useCallback(() => {
+      loadValues();
+    }, [])
+  );
+
+  const loadValues = async () => {
+    let keyFormatted = currentYear + "." + currentMonth;
+    let val = await AsyncStorage.getItem(keyFormatted);
+    if (val != null) {
+      let tTiempo = JSON.parse(val).tiempo.split(":");
+      originalHoras.current = tTiempo[0];
+      originalMinutos.current = tTiempo[1];
+      originalVideos.current = Number.parseInt(JSON.parse(val).videos, 10);
+      originalRevisitas.current = Number.parseInt(JSON.parse(val).revisitas, 10);
+      originalEstudios.current = Number.parseInt(JSON.parse(val).estudios, 10);
     } else {
-      const tTiempo = JSON.parse(val).tiempo.split(":");
-      const tHoras = Number.parseInt(tTiempo[0], 10);
-      const tMinutos = Number.parseInt(tTiempo[1], 10);
-      const tVideos = Number.parseInt(JSON.parse(val).videos, 10);
-      const tRevisitas = Number.parseInt(JSON.parse(val).revisitas, 10);
-      const tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
-
-      const newObj = {
-        tiempo: tHoras + obj.horas + " : " + (tMinutos + obj.minutos),
-        videos: tVideos + obj.videos,
-        revisitas: tRevisitas + obj.revisitas,
-        estudios: tEstudios + obj.estudios,
-      };
-      await AsyncStorage.setItem(keyFormatted, JSON.stringify(newObj));
+      originalHoras.current = 0;
+      originalMinutos.current = 0;
+      originalVideos.current = 0;
+      originalRevisitas.current = 0;
+      originalEstudios.current = 0;
     }
+    setHoras(originalHoras.current);
+    setMinutos(originalMinutos.current);
+    setVideos(originalVideos.current);
+    setRevisitas(originalRevisitas.current);
+    setEstudios(originalEstudios.current);
+  }
+  const editInform = async () => {
+    const keyFormatted = new Date().getFullYear() + "." + new Date().getMonth();
+    const newObj = {
+      tiempo: horas + " : " + minutos,
+      videos: videos,
+      revisitas: revisitas,
+      estudios: estudios,
+    };
+    await AsyncStorage.setItem(keyFormatted, JSON.stringify(newObj));
   };
   const validate = async () => {
+    console.log(horas + " " + minutos + " " + videos);
     let daysSoFar = new Date().getDate();
     let temHoras = Number.parseInt(horas === "" ? 0 : horas);
     let temMinutos = Number.parseInt(minutos === "" ? 0 : minutos);
@@ -110,38 +131,34 @@ const EditFormInform = ({ navigation }) => {
     setEstudios("");
   };
   return (
-    <View>
-      <View style={STRUCTURE.rowVertical}>
-        <View style={STRUCTURE.rowHorizontal}>
-          <Text style={formStyles.textInput}>Horas</Text>
-          <TextInput
-            style={formStyles.input}
-            keyboardType="numeric"
-            value={horas}
-            onChangeText={(txt) => {
-              if (nameRegex.test(txt)) {
-                setValidated(0);
+    <View style={{flex:1}}>
+      <View style={[STRUCTURE.rowHorizontal, { marginVertical: 10 }]}>
+        <View style={STRUCTURE.rowVertical}>
+          <View style={[STRUCTURE.rowHorizontal, { marginHorizontal: 10}]}>
+            <Text style={FONTS.subHeading2}>Horas</Text>
+            <TextInput
+              style={STRUCTURE.input}
+              keyboardType="numeric"
+              value={horas}
+              onChangeText={(txt) => {
                 setHoras(txt.trim());
-              } else {
-                setValidated(-1);
-                setErrorForm("Solo caracteres numericos (no . ni ,)");
-              }
-            }}
-          />
-        </View>
-        <View style={STRUCTURE.rowHorizontal}>
-          <Text style={formStyles.textInput}>Minutos</Text>
-          <TextInput
-            style={formStyles.input}
-            keyboardType="numeric"
-            value={minutos}
-            onChangeText={(txt) => setMinutos(txt)}
-          />
+              }}
+            />
+          </View>
+          <View style={[STRUCTURE.rowHorizontal, { marginHorizontal: 10 }]}>
+            <Text style={FONTS.subHeading2}>Minutos</Text>
+            <TextInput
+              style={formStyles.input}
+              keyboardType="numeric"
+              value={minutos}
+              onChangeText={(txt) => setMinutos(txt)}
+            />
+          </View>
         </View>
       </View>
 
-      <View style={STRUCTURE.rowHorizontal}>
-        <Text style={formStyles.textInput}>Videos</Text>
+      <View style={STRUCTURE.rowHorizontal, { margin: 10 }}>
+        <Text style={FONTS.subHeading2}>Videos</Text>
         <TextInput
           style={formStyles.input}
           keyboardType="numeric"
@@ -150,8 +167,8 @@ const EditFormInform = ({ navigation }) => {
         />
       </View>
 
-      <View style={STRUCTURE.rowHorizontal}>
-        <Text style={formStyles.textInput}>Revisitas</Text>
+      <View style={STRUCTURE.rowHorizontal, { margin: 10 }}>
+        <Text style={FONTS.subHeading2}>Revisitas</Text>
         <TextInput
           style={formStyles.input}
           keyboardType="numeric"
@@ -159,8 +176,9 @@ const EditFormInform = ({ navigation }) => {
           onChangeText={(txt) => setRevisitas(txt)}
         />
       </View>
-      <View style={STRUCTURE.rowHorizontal}>
-        <Text style={formStyles.textInput}>Estudios</Text>
+
+      <View style={STRUCTURE.rowHorizontal, { margin: 10 }}>
+        <Text style={FONTS.subHeading2}>Estudios</Text>
         <TextInput
           style={formStyles.input}
           keyboardType="numeric"
@@ -173,17 +191,26 @@ const EditFormInform = ({ navigation }) => {
           <Text style={formStyles.textError}>{errorForm}</Text>
         ) : null}
       </View>
-      <View style={[STRUCTURE.rowHorizontal, { marginVertical: 15 }]}>
-        <TouchableOpacity
-          style={[{ flex: 5 }, formStyles.btnClasic]}
-          onPress={() => {
-            validate();
-          }}
-        >
-          <Text style={formStyles.textSubmit}>Enviar</Text>
-        </TouchableOpacity>
+      <View style={[STRUCTURE.rowHorizontal,{margin:10}]}>
+        <View style={[STRUCTURE.rowVertical]}>
+          <TouchableOpacity
+            style={[{ flex: 5 }, formStyles.btnClasic,{backgroundColor:COLORS.red}]}
+            onPress={() => {
+              validate();
+            }}
+          >
+            <Text style={formStyles.textSubmit}>Enviar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[{ flex: 1 }, formStyles.btnClasic]}
+            onPress={() => {
+              clearForm();
+            }}
+          >
+            <FontAwesome name="undo" size={35} color="#ffffff" />
+          </TouchableOpacity></View>
       </View>
-    </View>
+    </View >
   );
 };
 const formStyles = StyleSheet.create({

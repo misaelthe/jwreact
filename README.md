@@ -3,7 +3,11 @@
 ### Pending tasks
 - [ ] Change hours
 - [ ] Delete month informs prior to last 3 months
-
+### 1.3
+* Design of Header Bar crashed on phone, but now fixed
+* Design of EditForm crashed on phone, but now fixed
+* Design of SettingsScreen crashed on phone, but now fixed
+* Design of HomeScreen crashed on phone, but now fixed
 ### 1.2.1
 * Header Bar completed
 * EditFormInform created

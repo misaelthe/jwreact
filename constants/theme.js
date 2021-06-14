@@ -7,13 +7,13 @@ export const COLORS = {
   tertiary: "#F0F0F6",
   white: "#FFFFFF",
   red: "#FF0000",
+  gray:"#B5B4BC"
 };
 export const SIZES = {
-  radius: 15,
   radius_max: 50,
-  min: 15,
-  width,
-  height,
+  min: 10,
+  width:width,
+  height:height,
 };
 export const FONTS = {
   subHeading: {
@@ -26,7 +26,6 @@ export const FONTS = {
   },
   text: {
     fontSize: 17,
-    color: "black",
   },
 };
 export const STRUCTURE = {
@@ -41,12 +40,27 @@ export const STRUCTURE = {
     flex:1
   },
   viewRounded: {
-    borderRadius: SIZES.radius,
+    borderRadius: 25,
     padding: SIZES.min,
   },
   contentCenteredVH: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  contentCenteredH: {
+    alignItems: "center",
+  },
+  contentCenteredV: {
+    justifyContent: "center",
+  },
+  contentFlexStart:{justifyContent:"flex-start"},
+  input: {
+    height: 50,
+    borderColor: COLORS.gray,
+    borderWidth: 1,
+    borderRadius: SIZES.min,
+    padding: SIZES.min,
+    fontSize: 21,
   },
 };
 const appTheme = { COLORS, SIZES, FONTS, STRUCTURE };
