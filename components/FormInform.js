@@ -40,10 +40,11 @@ const FormInform = ({ navigation }) => {
       const tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
 
       const newObj = {
-        tiempo: tHoras + obj.horas + " : " + (tMinutos + obj.minutos),
+        hours: tHoras + obj.horas,
+        minutes: tMinutos + obj.minutos,
         videos: tVideos + obj.videos,
-        revisitas: tRevisitas + obj.revisitas,
-        estudios: tEstudios + obj.estudios,
+        returnVisits: tRevisitas + obj.revisitas,
+        studies: tEstudios + obj.estudios,
       };
       await AsyncStorage.setItem(keyFormatted, JSON.stringify(newObj));
     }

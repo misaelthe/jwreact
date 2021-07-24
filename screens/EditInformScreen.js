@@ -4,6 +4,7 @@ import HeaderBar from "../components/HeaderBar";
 import EditFormInform from "../components/EditFormInform";
 import { SIZES } from "../constants/theme.js";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 const EditInformScreen = ({ navigation }) => {
   return (
     <SafeAreaView>

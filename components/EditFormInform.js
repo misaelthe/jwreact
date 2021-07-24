@@ -7,26 +7,24 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS, SIZES, FONTS, STRUCTURE } from "../constants/theme.js";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+import { getterInform, setterInform } from "../util/SenderInform.js";
+
 const EditFormInform = ({ navigation }) => {
   const [validated, setValidated] = useState(0);
-  const nameRegex = new RegExp(/^[1-9]+$/i);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [horas, setHoras] = useState("");
-  const [minutos, setMinutos] = useState("");
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
   const [videos, setVideos] = useState("");
-  const [revisitas, setRevisitas] = useState("");
-  const [estudios, setEstudios] = useState("");
-  const [errorForm, setErrorForm] = useState("");
-  const originalHoras = useRef(null);
-  const originalMinutos = useRef(null);
-  const originalVideos = useRef(null);
-  const originalRevisitas = useRef(null);
-  const originalEstudios = useRef(null);
+  const [returnVisits, setReturnVisits] = useState("");
+  const [studies, setStudies] = useState("");
+  const [messageError, setMessageError] = useState("");
+
+  const numberRegex = new RegExp(/^[0-9]+$/i);
+  const daysSoFar = new Date().getDate();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -34,169 +32,139 @@ const EditFormInform = ({ navigation }) => {
     }, [])
   );
 
-  const loadValues = async () => {
-    let keyFormatted = currentYear + "." + currentMonth;
-    let val = await AsyncStorage.getItem(keyFormatted);
-    if (val != null) {
-      let tTiempo = JSON.parse(val).tiempo.split(":");
-      originalHoras.current = tTiempo[0];
-      originalMinutos.current = tTiempo[1];
-      originalVideos.current = Number.parseInt(JSON.parse(val).videos, 10);
-      originalRevisitas.current = Number.parseInt(JSON.parse(val).revisitas, 10);
-      originalEstudios.current = Number.parseInt(JSON.parse(val).estudios, 10);
-    } else {
-      originalHoras.current = 0;
-      originalMinutos.current = 0;
-      originalVideos.current = 0;
-      originalRevisitas.current = 0;
-      originalEstudios.current = 0;
-    }
-    setHoras(originalHoras.current);
-    setMinutos(originalMinutos.current);
-    setVideos(originalVideos.current);
-    setRevisitas(originalRevisitas.current);
-    setEstudios(originalEstudios.current);
-  }
-  const editInform = async () => {
-    const keyFormatted = new Date().getFullYear() + "." + new Date().getMonth();
-    const newObj = {
-      tiempo: horas + " : " + minutos,
+  const loadValues = () => {
+    const inform = getterInform(currentMonth, currentYear);
+    setHours(inform.hours);
+    setMinutes(inform.minutes);
+    setVideos(inform.videos);
+    setReturnVisits(inform.returnVisits);
+    setStudies(inform.studies);
+  };
+
+  const editInform = () => {
+    const inform = {
+      hours: hours,
+      minutes: minutes,
       videos: videos,
-      revisitas: revisitas,
-      estudios: estudios,
+      returnVisits: returnVisits,
+      studies: studies,
     };
-    await AsyncStorage.setItem(keyFormatted, JSON.stringify(newObj));
+    setterInform(inform, currentMonth, currentYear);
+    navigation.navigate("Home");
   };
-  const validate = async () => {
-    console.log(horas + " " + minutos + " " + videos);
-    let daysSoFar = new Date().getDate();
-    let temHoras = Number.parseInt(horas === "" ? 0 : horas);
-    let temMinutos = Number.parseInt(minutos === "" ? 0 : minutos);
-    let temVideos = Number.parseInt(videos === "" ? 0 : videos);
-    let temRevisitas = Number.parseInt(revisitas === "" ? 0 : revisitas);
-    let temEstudios = Number.parseInt(estudios === "" ? 0 : estudios);
-    console.log(temHoras + " y las oras " + daysSoFar + "revi " + temRevisitas);
-    if (temHoras > daysSoFar * 24) {
-      setValidated(-1);
-      setErrorForm("Las horas no pueden ser mayores a " + daysSoFar);
-    } else if (temMinutos > 59) {
-      setValidated(-1);
-      setErrorForm("Los minutos no pueden ser mayores a 59");
-    } else if (
-      temHoras == 0 &&
-      temMinutos == 0 &&
-      (temRevisitas != 0 || temEstudios != 0)
+
+  const validateInform = async () => {
+    if (
+      !numberRegex.test(hours) ||
+      !numberRegex.test(minutes) ||
+      !numberRegex.test(videos) ||
+      !numberRegex.test(returnVisits) ||
+      !numberRegex.test(studies)
     ) {
-      let littleText = "";
-      if (temRevisitas !== "" && temEstudios !== "")
-        littleText = "revisitas y estudios";
-      else if (temRevisitas !== "") littleText = "revisitas";
-      else littleText = "estudios";
-      setValidated(-1);
-      setErrorForm(
-        "No puedes informar " + littleText + " si no informas tiempo"
+      setMessageError("You have entered an invalid character");
+    }
+    const inform = getterInform(currentMonth, currentYear);
+    const hoursConsolidated =
+      Number.parseInt(inform.hours) + Number.parseInt(hours);
+    if (hoursConsolidated > daysSoFar * 24 && Number.parseInt(minutes) != 0) {
+      setMessageError("You cannot inform that amount of hours");
+    }
+    if (Number.parseInt(minutes) > 59) {
+      setMessageError("You cannot inform that amount of minutes");
+    }
+    if (
+      (Number.parseInt(returnVisits) > 0 || Number.parseInt(studies) > 0) &&
+      Number.parseInt(hours) == 0 &&
+      Number.parseInt(minutes) == 0
+    ) {
+      setMessageError(
+        "You cannot inform return visits or studies if you don't inform any hour"
       );
-    } else if (
-      temHoras == 0 &&
-      temMinutos == 0 &&
-      temVideos == 0 &&
-      temRevisitas == 0 &&
-      temEstudios == 0
+    }
+    if (
+      Number.parseInt(hours) == 0 &&
+      Number.parseInt(minutes) == 0 &&
+      Number.parseInt(videos) == 0 &&
+      Number.parseInt(returnVisits) == 0 &&
+      Number.parseInt(studies) == 0
     ) {
-      setValidated(-1);
-      setErrorForm("No puedes enviar un informe vacio");
+      setMessageError("You cannot send a blank inform");
     } else {
-      const myObj = {
-        horas: temHoras,
-        minutos: temMinutos,
-        videos: temVideos,
-        revisitas: temRevisitas,
-        estudios: temEstudios,
-      };
-      registerInform(myObj);
-      setValidated(0);
-      setHoras("");
-      setMinutos("");
-      setVideos("");
-      setRevisitas("");
-      setEstudios("");
-      navigation.navigate("Home");
+      editInform();
     }
   };
-  const clearForm = () => {
-    setHoras("");
-    setMinutos("");
-    setVideos("");
-    setRevisitas("");
-    setEstudios("");
-  };
+
   return (
-    <View style={{flex:1}}>
+    <View style={{ flex: 1 }}>
       <View style={[STRUCTURE.rowHorizontal, { marginVertical: 10 }]}>
         <View style={STRUCTURE.rowVertical}>
-          <View style={[STRUCTURE.rowHorizontal, { marginHorizontal: 10}]}>
-            <Text style={FONTS.subHeading2}>Horas</Text>
+          <View style={[STRUCTURE.rowHorizontal, { marginHorizontal: 10 }]}>
+            <Text style={[FONTS.headingInput]}>Horas</Text>
             <TextInput
               style={STRUCTURE.input}
               keyboardType="numeric"
-              value={horas}
-              onChangeText={(txt) => {
-                setHoras(txt.trim());
+              value={hours}
+              onChangeText={(val) => {
+                setHoras(Number.parseInt(val.trim()));
               }}
             />
           </View>
           <View style={[STRUCTURE.rowHorizontal, { marginHorizontal: 10 }]}>
-            <Text style={FONTS.subHeading2}>Minutos</Text>
+            <Text style={FONTS.headingInput}>Minutos</Text>
             <TextInput
               style={formStyles.input}
               keyboardType="numeric"
               value={minutos}
-              onChangeText={(txt) => setMinutos(txt)}
+              onChangeText={(val) => setMinutes(Number.parseInt(val.trim()))}
             />
           </View>
         </View>
       </View>
 
-      <View style={STRUCTURE.rowHorizontal, { margin: 10 }}>
-        <Text style={FONTS.subHeading2}>Videos</Text>
+      <View style={(STRUCTURE.rowHorizontal, { margin: 10 })}>
+        <Text style={FONTS.headingInput}>Videos</Text>
         <TextInput
           style={formStyles.input}
           keyboardType="numeric"
           value={videos}
-          onChangeText={(txt) => setVideos(txt)}
+          onChangeText={(val) => setVideos(val.trim())}
         />
       </View>
 
-      <View style={STRUCTURE.rowHorizontal, { margin: 10 }}>
-        <Text style={FONTS.subHeading2}>Revisitas</Text>
+      <View style={(STRUCTURE.rowHorizontal, { margin: 10 })}>
+        <Text style={FONTS.headingInput}>Revisitas</Text>
         <TextInput
           style={formStyles.input}
           keyboardType="numeric"
           value={revisitas}
-          onChangeText={(txt) => setRevisitas(txt)}
+          onChangeText={(val) => setReturnVisits(Number.parseInt(val.trim()))}
         />
       </View>
 
-      <View style={STRUCTURE.rowHorizontal, { margin: 10 }}>
-        <Text style={FONTS.subHeading2}>Estudios</Text>
+      <View style={(STRUCTURE.rowHorizontal, { margin: 10 })}>
+        <Text style={FONTS.headingInput}>Estudios</Text>
         <TextInput
           style={formStyles.input}
           keyboardType="numeric"
           value={estudios}
-          onChangeText={(txt) => setEstudios(txt)}
+          onChangeText={(val) => setStudies(Number.parseInt(val.trim()))}
         />
       </View>
       <View style={STRUCTURE.rowHorizontal}>
         {validated == -1 ? (
-          <Text style={formStyles.textError}>{errorForm}</Text>
+          <Text style={formStyles.textError}>{messageError}</Text>
         ) : null}
       </View>
-      <View style={[STRUCTURE.rowHorizontal,{margin:10}]}>
+      <View style={[STRUCTURE.rowHorizontal, { margin: 10 }]}>
         <View style={[STRUCTURE.rowVertical]}>
           <TouchableOpacity
-            style={[{ flex: 5 }, formStyles.btnClasic,{backgroundColor:COLORS.red}]}
+            style={[
+              { flex: 5 },
+              formStyles.btnClasic,
+              { backgroundColor: COLORS.red },
+            ]}
             onPress={() => {
-              validate();
+              validateInform();
             }}
           >
             <Text style={formStyles.textSubmit}>Enviar</Text>
@@ -204,13 +172,14 @@ const EditFormInform = ({ navigation }) => {
           <TouchableOpacity
             style={[{ flex: 1 }, formStyles.btnClasic]}
             onPress={() => {
-              clearForm();
+              loadValues();
             }}
           >
             <FontAwesome name="undo" size={35} color="#ffffff" />
-          </TouchableOpacity></View>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View >
+    </View>
   );
 };
 const formStyles = StyleSheet.create({
@@ -221,10 +190,6 @@ const formStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
-  },
-  textInput: {
-    fontSize: 18,
-    marginVertical: 10,
   },
   input: {
     height: 50,

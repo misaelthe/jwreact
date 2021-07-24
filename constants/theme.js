@@ -7,15 +7,26 @@ export const COLORS = {
   tertiary: "#F0F0F6",
   white: "#FFFFFF",
   red: "#FF0000",
-  gray:"#B5B4BC"
+  gray: "#B5B4BC",
 };
 export const SIZES = {
   radius_max: 50,
   min: 10,
-  width:width,
-  height:height,
+  mn1: 9,
+  mn2: 12,
+  mn3: 15,
+  mn4: 18,
+  mn5: 21,
+  mn6: 24,
+  width: width,
+  height: height,
 };
 export const FONTS = {
+  headingInput: {
+    fontSize: SIZES.mn5,
+    fontWeight: "bold",
+    marginVertical: SIZES.mn4,
+  },
   subHeading: {
     fontSize: 25,
     fontWeight: "bold",
@@ -32,12 +43,12 @@ export const STRUCTURE = {
   rowVertical: {
     flexDirection: "row",
     justifyContent: "space-between",
-    flex:1
+    flex: 1,
   },
   rowHorizontal: {
     flexDirection: "column",
     justifyContent: "space-between",
-    flex:1
+    flex: 1,
   },
   viewRounded: {
     borderRadius: 25,
@@ -53,7 +64,7 @@ export const STRUCTURE = {
   contentCenteredV: {
     justifyContent: "center",
   },
-  contentFlexStart:{justifyContent:"flex-start"},
+  contentFlexStart: { justifyContent: "flex-start" },
   input: {
     height: 50,
     borderColor: COLORS.gray,

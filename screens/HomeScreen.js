@@ -44,6 +44,11 @@ const HomeScreen = ({ navigation }) => {
     })
   );
   const loadWrapUpInform = async () => {
+    const hoursRegex = new RegExp(/^[0-9]+$/i);
+    const ab = 5;
+    const cd = 6;
+    console.log(ab + cd);
+
     let keyFormatted = currentYear + "." + currentMonth;
     let val = await AsyncStorage.getItem(keyFormatted);
     if (val != null) {
@@ -71,8 +76,8 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1,backgroundColor: COLORS.primary }}>
-      <View style={{flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primary }}>
+      <View style={{ flex: 1 }}>
         <View style={mainStyle.wrapperHeader}>
           <View style={mainStyle.header}>
             <Text style={headerStyle.txtDay}>
@@ -112,7 +117,10 @@ const HomeScreen = ({ navigation }) => {
               ]}
             >
               <Text
-                style={{ color: buttonSelected === 0 ? "#ffffff" : "#7540EE", fontSize: 19 }}
+                style={{
+                  color: buttonSelected === 0 ? "#ffffff" : "#7540EE",
+                  fontSize: 19,
+                }}
               >
                 {monthsOfYear[new Date().getMonth() - 2]}
               </Text>
@@ -138,7 +146,10 @@ const HomeScreen = ({ navigation }) => {
               ]}
             >
               <Text
-                style={{ color: buttonSelected === 1 ? "#ffffff" : "#7540EE", fontSize: 19 }}
+                style={{
+                  color: buttonSelected === 1 ? "#ffffff" : "#7540EE",
+                  fontSize: 19,
+                }}
               >
                 {monthsOfYear[new Date().getMonth() - 1]}
               </Text>
@@ -159,7 +170,10 @@ const HomeScreen = ({ navigation }) => {
               ]}
             >
               <Text
-                style={{ color: buttonSelected === 2 ? "#ffffff" : "#7540EE", fontSize: 19 }}
+                style={{
+                  color: buttonSelected === 2 ? "#ffffff" : "#7540EE",
+                  fontSize: 19,
+                }}
               >
                 {monthsOfYear[new Date().getMonth()]}
               </Text>
@@ -215,7 +229,8 @@ const HomeScreen = ({ navigation }) => {
           </View>
           {/* ends second row wrap-up inform */}
           {/* ends wrap-up inform */}
-        </View></View>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -245,8 +260,13 @@ const mainStyle = StyleSheet.create({
   },
 });
 const headerStyle = StyleSheet.create({
-  txtDay: { fontSize: 40, fontWeight: "bold", textAlign: "center", color: 'white' },
-  txtMonth: { fontSize: 30, textAlign: "center", color: 'white' },
+  txtDay: {
+    fontSize: 40,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "white",
+  },
+  txtMonth: { fontSize: 30, textAlign: "center", color: "white" },
 });
 const bodyStyle = StyleSheet.create({
   btnMonth: {

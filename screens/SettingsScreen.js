@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -24,8 +19,10 @@ const SettingsScreen = ({ navigation }) => {
             style={[
               STRUCTURE.viewRounded,
               {
-                backgroundColor: COLORS.white, paddingVertical: 10
-              }]}
+                backgroundColor: COLORS.white,
+                paddingVertical: 10,
+              },
+            ]}
           >
             <View
               style={[
@@ -40,7 +37,7 @@ const SettingsScreen = ({ navigation }) => {
               <Text style={FONTS.text}>
                 Informes de 3 meses atras seran eliminados de forma permanente,
                 keep that in mind.
-                </Text>
+              </Text>
             </View>
           </View>
         </View>
@@ -63,46 +60,87 @@ const SettingsScreen = ({ navigation }) => {
             ]}
           >
             <View
-              style={
-                [{
+              style={[
+                {
                   padding: SIZES.min,
                   borderBottomWidth: 1,
                   borderBottomColor: COLORS.red,
                   flexDirection: "row",
                   flex: 0,
-                }]
-              }
+                  alignItems: "stretch",
+                },
+              ]}
             >
-              <Text style={[FONTS.text, { color: COLORS.red, flex: 4, textAlignVertical: "center" }]}>
-                Wipe Data? There's no turning back
+              <View
+                style={[
+                  {
+                    flex: 4,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  },
+                ]}
+              >
+                <Text
+                  style={[FONTS.text, FONTS.subHeading2, { color: COLORS.red }]}
+                >
+                  Wipe Data? There's no turning back
                 </Text>
+              </View>
               <TouchableOpacity
-                style={[styleSettings.btnDelete, STRUCTURE.contentCenteredVH, { flex: 1 }]}
+                style={[
+                  styleSettings.btnDelete,
+                  STRUCTURE.contentCenteredVH,
+                  { flex: 1 },
+                ]}
                 onPress={async () => {
                   AsyncStorage.clear();
                 }}
-              ><Entypo name="trash" size={33} color="#ffffff" />
+              >
+                <Entypo name="trash" size={33} color="#ffffff" />
               </TouchableOpacity>
             </View>
-            <View style={
-              {
+            <View
+              style={{
                 padding: SIZES.min,
                 flexDirection: "row",
                 flex: 0,
-              }
-            }>
-              <Text style={[FONTS.text, { color: COLORS.red, flex: 4, textAlign: "center", textAlignVertical: "center" }]}>
-                Edit your inform
-              </Text>
+              }}
+            >
+              <View
+                style={[
+                  {
+                    flex: 4,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    FONTS.text,
+                    FONTS.subHeading2,
+                    {
+                      color: COLORS.red,
+                    },
+                  ]}
+                >
+                  Edit your inform
+                </Text>
+              </View>
               <TouchableOpacity
-                style={[styleSettings.btnDelete, STRUCTURE.contentCenteredVH, { flex: 1 }]}
+                style={[
+                  styleSettings.btnDelete,
+                  STRUCTURE.contentCenteredVH,
+                  { flex: 1 },
+                ]}
                 onPress={async () => {
-                  navigation.navigate("EditInformScreen", { navigation: navigation });
+                  navigation.navigate("EditInformScreen", {
+                    navigation: navigation,
+                  });
                 }}
               >
                 <Foundation name="clipboard-pencil" size={33} color="#ffffff" />
               </TouchableOpacity>
-
             </View>
           </View>
         </View>
@@ -118,6 +156,5 @@ const styleSettings = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
 });
 export default SettingsScreen;
