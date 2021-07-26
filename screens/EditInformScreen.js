@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import HeaderBar from "../components/HeaderBar";
-import EditFormInform from "../components/EditFormInform";
+import FormInform from "../components/FormInform";
 import { SIZES } from "../constants/theme.js";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -10,7 +10,7 @@ const EditInformScreen = ({ navigation }) => {
     <SafeAreaView>
       <HeaderBar navigation={navigation} />
       <ScrollView style={{ padding: SIZES.min }}>
-        <EditFormInform navigation={navigation} />
+        <FormInform navigation={navigation} addInformBoolean={false} />
       </ScrollView>
     </SafeAreaView>
   );

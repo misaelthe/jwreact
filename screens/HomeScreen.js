@@ -8,6 +8,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES, FONTS, STRUCTURE } from "../constants/theme.js";
 
+import { getterInform } from "../util/UtilInform";
 const HomeScreen = ({ navigation }) => {
   const daysOfWeek = [
     "Lunes",
@@ -28,10 +29,11 @@ const HomeScreen = ({ navigation }) => {
     "Julio",
   ];
 
-  const [currentTiempo, setCurrentTiempo] = useState("0 : 0");
-  const [currentVideos, setCurrentVideos] = useState(0);
-  const [currentRevisitas, setCurrentRevisitas] = useState(0);
-  const [currentEstudios, setCurrentEstudios] = useState(0);
+  const [currentHours, setCurrentHours] = useState("0");
+  const [currentMinutes, setCurrentMinutes] = useState("0");
+  const [currentVideos, setCurrentVideos] = useState("0");
+  const [currentReturnVisits, setCurrentReturnVisits] = useState("0");
+  const [currentStudies, setCurrentStudies] = useState("0");
   const [currentDate, setCurrentDate] = useState(new Date().getDate());
   const [currentDay, setCurrentDay] = useState(new Date().getDay());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -44,34 +46,20 @@ const HomeScreen = ({ navigation }) => {
     })
   );
   const loadWrapUpInform = async () => {
-    const hoursRegex = new RegExp(/^[0-9]+$/i);
-    const ab = 5;
-    const cd = 6;
-    console.log(ab + cd);
-
-    let keyFormatted = currentYear + "." + currentMonth;
-    let val = await AsyncStorage.getItem(keyFormatted);
-    if (val != null) {
-      let tTiempo = JSON.parse(val).tiempo;
-      let tVideos = Number.parseInt(JSON.parse(val).videos, 10);
-      let tRevisitas = Number.parseInt(JSON.parse(val).revisitas, 10);
-      let tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
-      if (
-        currentTiempo !== tTiempo ||
-        currentVideos != tVideos ||
-        currentRevisitas != tRevisitas ||
-        currentEstudios != tEstudios
-      ) {
-        setCurrentTiempo(tTiempo);
-        setCurrentVideos(tVideos);
-        setCurrentRevisitas(tRevisitas);
-        setCurrentEstudios(tEstudios);
-      }
-    } else {
-      setCurrentTiempo("0 : 0");
-      setCurrentVideos(0);
-      setCurrentRevisitas(0);
-      setCurrentEstudios(0);
+    console.log("messss" + currentMonth);
+    const result = await getterInform(currentMonth, currentYear);
+    if (
+      currentHours != result.hours ||
+      currentMinutes != result.minutes ||
+      currentVideos != result.videos ||
+      currentReturnVisits != result.returnVisits ||
+      currentStudies != result.studies
+    ) {
+      setCurrentHours(result.hours);
+      setCurrentMinutes(result.minutes);
+      setCurrentVideos(result.videos);
+      setCurrentReturnVisits(result.returnVisits);
+      setCurrentStudies(result.studies);
     }
   };
 
@@ -188,7 +176,9 @@ const HomeScreen = ({ navigation }) => {
                   <IconFeather name="clock" size={40} />
                 </View>
                 <View>
-                  <Text style={bodyStyle.txtDescription}>{currentTiempo}</Text>
+                  <Text style={bodyStyle.txtDescription}>
+                    {currentHours + " : " + currentMinutes}
+                  </Text>
                 </View>
               </View>
               <View style={bodyStyle.elInform}>
@@ -210,7 +200,7 @@ const HomeScreen = ({ navigation }) => {
                   </View>
                   <View>
                     <Text style={bodyStyle.txtDescription}>
-                      {currentRevisitas}
+                      {currentReturnVisits}
                     </Text>
                   </View>
                 </View>
@@ -220,7 +210,7 @@ const HomeScreen = ({ navigation }) => {
                   </View>
                   <View>
                     <Text style={bodyStyle.txtDescription}>
-                      {currentEstudios}
+                      {currentStudies}
                     </Text>
                   </View>
                 </View>

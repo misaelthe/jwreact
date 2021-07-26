@@ -21,8 +21,7 @@ const InformScreen = ({ navigation }) => {
               Recuerda que cada minuto cuenta.
             </Text>
           </View>
-                   <FormInform navigation={navigation} />
-          
+          <FormInform navigation={navigation} addInformBoolean={true} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -33,7 +32,7 @@ const informStyle = StyleSheet.create({
   containerTitle: { marginVertical: 20 },
   title: { fontSize: 32, fontWeight: "bold" },
   subtitle: { fontSize: 17, color: "gray", marginVertical: 5 },
-  
+
   textSubmit: {
     fontSize: 18,
     color: "#FFFFFF",

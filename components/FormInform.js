@@ -4,113 +4,112 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Pressable,
   TouchableOpacity,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 import Entypo from "react-native-vector-icons/Entypo";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const FormInform = ({ navigation }) => {
-  const [validated, setValidated] = useState(0);
-  const [horas, setHoras] = useState("");
-  const [minutos, setMinutos] = useState("");
-  const [videos, setVideos] = useState("");
-  const [revisitas, setRevisitas] = useState("");
-  const [estudios, setEstudios] = useState("");
-  const [errorForm, setErrorForm] = useState("");
-  const nameRegex = new RegExp(/^[1-9]+$/i);
+import { addInform, getterInform, setterInform } from "../util/UtilInform";
 
-  const registerInform = async (obj) => {
-    const keyFormatted = new Date().getFullYear() + "." + new Date().getMonth();
-    const val = await AsyncStorage.getItem(keyFormatted);
-    if (val == null) {
-      const newObj = {
-        tiempo: obj.horas + " : " + obj.minutos,
-        videos: obj.videos,
-        revisitas: obj.revisitas,
-        estudios: obj.estudios,
-      };
-      await AsyncStorage.setItem(keyFormatted, JSON.stringify(newObj));
+const FormInform = ({ navigation, addInformBoolean }) => {
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [hours, setHours] = useState("0");
+  const [minutes, setMinutes] = useState("0");
+  const [videos, setVideos] = useState("0");
+  const [returnVisits, setReturnVisits] = useState("0");
+  const [studies, setStudies] = useState("0");
+  const [messageError, setMessageError] = useState("");
+
+  const numberRegex = new RegExp(/^[0-9]*$/i);
+  const daysSoFar = new Date().getDate();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      addInformBoolean == true ? null : loadValues();
+    }, [])
+  );
+
+  const loadValues = async () => {
+    const inform = await getterInform(currentMonth, currentYear);
+    setHours(inform.hours);
+    setMinutes(inform.minutes);
+    setVideos(inform.videos);
+    setReturnVisits(inform.returnVisits);
+    setStudies(inform.studies);
+    setMessageError("");
+  };
+
+  const setInform = async () => {
+    const inform = {
+      hours: hours,
+      minutes: minutes,
+      videos: videos,
+      returnVisits: returnVisits,
+      studies: studies,
+    };
+    addInformBoolean == true
+      ? await addInform(inform, currentMonth, currentYear)
+      : await setterInform(inform, currentMonth, currentYear);
+    clearForm();
+    navigation.navigate("Home");
+  };
+
+  const validateInform = async () => {
+    if (
+      !numberRegex.test(hours) ||
+      !numberRegex.test(minutes) ||
+      !numberRegex.test(videos) ||
+      !numberRegex.test(returnVisits) ||
+      !numberRegex.test(studies)
+    ) {
+      setMessageError("You have entered an invalid character");
     } else {
-      const tTiempo = JSON.parse(val).tiempo.split(":");
-      const tHoras = Number.parseInt(tTiempo[0], 10);
-      const tMinutos = Number.parseInt(tTiempo[1], 10);
-      const tVideos = Number.parseInt(JSON.parse(val).videos, 10);
-      const tRevisitas = Number.parseInt(JSON.parse(val).revisitas, 10);
-      const tEstudios = Number.parseInt(JSON.parse(val).estudios, 10);
-
-      const newObj = {
-        hours: tHoras + obj.horas,
-        minutes: tMinutos + obj.minutos,
-        videos: tVideos + obj.videos,
-        returnVisits: tRevisitas + obj.revisitas,
-        studies: tEstudios + obj.estudios,
-      };
-      await AsyncStorage.setItem(keyFormatted, JSON.stringify(newObj));
+      const inform = await getterInform(currentMonth, currentYear);
+      const hoursConsolidated =
+        addInformBoolean == true
+          ? Number.parseInt(inform.hours) + Number.parseInt(hours)
+          : Number.parseInt(hours);
+      if (
+        (hoursConsolidated == daysSoFar * 24 &&
+          Number.parseInt(minutes) != 0) ||
+        hoursConsolidated > daysSoFar * 24
+      ) {
+        setMessageError("You cannot inform more hours than in a month");
+      } else if (Number.parseInt(minutes) > 59) {
+        setMessageError("You cannot inform that amount of minutes");
+      } else if (
+        (Number.parseInt(returnVisits) > 0 || Number.parseInt(studies) > 0) &&
+        Number.parseInt(hours) == 0 &&
+        Number.parseInt(minutes) == 0
+      ) {
+        setMessageError(
+          "You cannot inform return visits or studies if you don't inform any hour"
+        );
+      } else if (
+        Number.parseInt(hours) == 0 &&
+        Number.parseInt(minutes) == 0 &&
+        Number.parseInt(videos) == 0 &&
+        Number.parseInt(returnVisits) == 0 &&
+        Number.parseInt(studies) == 0
+      ) {
+        setMessageError("You cannot send a blank inform");
+      } else {
+        setInform();
+      }
     }
   };
-  const validate = async () => {
-    let daysSoFar = new Date().getDate();
-    let temHoras = Number.parseInt(horas === "" ? 0 : horas);
-    let temMinutos = Number.parseInt(minutos === "" ? 0 : minutos);
-    let temVideos = Number.parseInt(videos === "" ? 0 : videos);
-    let temRevisitas = Number.parseInt(revisitas === "" ? 0 : revisitas);
-    let temEstudios = Number.parseInt(estudios === "" ? 0 : estudios);
-    console.log(temHoras + " y las oras " + daysSoFar + "revi " + temRevisitas);
-    if (temHoras > daysSoFar * 24) {
-      setValidated(-1);
-      setErrorForm("Las horas no pueden ser mayores a " + daysSoFar);
-    } else if (temMinutos > 59) {
-      setValidated(-1);
-      setErrorForm("Los minutos no pueden ser mayores a 59");
-    } else if (
-      temHoras == 0 &&
-      temMinutos == 0 &&
-      (temRevisitas != 0 || temEstudios != 0)
-    ) {
-      let littleText = "";
-      if (temRevisitas !== "" && temEstudios !== "")
-        littleText = "revisitas y estudios";
-      else if (temRevisitas !== "") littleText = "revisitas";
-      else littleText = "estudios";
-      setValidated(-1);
-      setErrorForm(
-        "No puedes informar " + littleText + " si no informas tiempo"
-      );
-    } else if (
-      temHoras == 0 &&
-      temMinutos == 0 &&
-      temVideos == 0 &&
-      temRevisitas == 0 &&
-      temEstudios == 0
-    ) {
-      setValidated(-1);
-      setErrorForm("No puedes enviar un informe vacio");
-    } else {
-      const myObj = {
-        horas: temHoras,
-        minutos: temMinutos,
-        videos: temVideos,
-        revisitas: temRevisitas,
-        estudios: temEstudios,
-      };
-      registerInform(myObj);
-      setValidated(0);
-      setHoras("");
-      setMinutos("");
-      setVideos("");
-      setRevisitas("");
-      setEstudios("");
-      navigation.navigate("Home");
-    }
-  };
+
   const clearForm = () => {
-    setHoras("");
-    setMinutos("");
-    setVideos("");
-    setRevisitas("");
-    setEstudios("");
+    setHours("0");
+    setMinutes("0");
+    setVideos("0");
+    setReturnVisits("0");
+    setStudies("0");
+    setMessageError("");
   };
+
   return (
     <View style={formStyles.container}>
       <View style={formStyles.row}>
@@ -119,16 +118,10 @@ const FormInform = ({ navigation }) => {
           <TextInput
             style={formStyles.input}
             keyboardType="numeric"
-            value={horas}
-            onChangeText={(txt) => {
-              if (nameRegex.test(txt)) {
-                setValidated(0);
-                setHoras(txt.trim());
-              } else {
-                setValidated(-1);
-                setErrorForm("Solo caracteres numericos (no . ni ,)");
-              }
-            }}
+            value={hours == "0" && addInformBoolean == true ? "" : hours}
+            onChangeText={(val) =>
+              setHours(val.trim() == "" ? "0" : val.trim())
+            }
           />
         </View>
         <View style={formStyles.containerInputTime}>
@@ -136,8 +129,10 @@ const FormInform = ({ navigation }) => {
           <TextInput
             style={formStyles.input}
             keyboardType="numeric"
-            value={minutos}
-            onChangeText={(txt) => setMinutos(txt)}
+            value={minutes == "0" && addInformBoolean == true ? "" : minutes}
+            onChangeText={(val) =>
+              setMinutes(val.trim() == "" ? "0" : val.trim())
+            }
           />
         </View>
       </View>
@@ -147,8 +142,8 @@ const FormInform = ({ navigation }) => {
         <TextInput
           style={formStyles.input}
           keyboardType="numeric"
-          value={videos}
-          onChangeText={(txt) => setVideos(txt)}
+          value={videos == "0" && addInformBoolean == true ? "" : videos}
+          onChangeText={(val) => setVideos(val.trim() == "" ? "0" : val.trim())}
         />
       </View>
 
@@ -157,8 +152,12 @@ const FormInform = ({ navigation }) => {
         <TextInput
           style={formStyles.input}
           keyboardType="numeric"
-          value={revisitas}
-          onChangeText={(txt) => setRevisitas(txt)}
+          value={
+            returnVisits == "0" && addInformBoolean == true ? "" : returnVisits
+          }
+          onChangeText={(val) =>
+            setReturnVisits(val.trim() == "" ? "0" : val.trim())
+          }
         />
       </View>
       <View>
@@ -166,32 +165,45 @@ const FormInform = ({ navigation }) => {
         <TextInput
           style={formStyles.input}
           keyboardType="numeric"
-          value={estudios}
-          onChangeText={(txt) => setEstudios(txt)}
+          value={studies == "0" && addInformBoolean == true ? "" : studies}
+          onChangeText={(val) =>
+            setStudies(val.trim() == "" ? "0" : val.trim())
+          }
         />
       </View>
       <View>
-        {validated == -1 ? (
-          <Text style={formStyles.textError}>{errorForm}</Text>
-        ) : null}
+        <Text style={formStyles.messageError}>
+          {messageError == "" ? null : messageError}
+        </Text>
       </View>
       <View style={[formStyles.row, { marginVertical: 15 }]}>
         <TouchableOpacity
           style={[{ flex: 5 }, formStyles.btnClasic]}
           onPress={() => {
-            validate();
+            validateInform();
           }}
         >
           <Text style={formStyles.textSubmit}>Enviar</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[{ flex: 1 }, formStyles.btnClasic]}
-          onPress={() => {
-            clearForm();
-          }}
-        >
-          <Entypo name="trash" size={35} color="#ffffff" />
-        </TouchableOpacity>
+        {addInformBoolean == true ? (
+          <TouchableOpacity
+            style={[{ flex: 1 }, formStyles.btnClasic]}
+            onPress={() => {
+              clearForm();
+            }}
+          >
+            <Entypo name="trash" size={35} color="#ffffff" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={[{ flex: 1 }, formStyles.btnClasic]}
+            onPress={() => {
+              loadValues();
+            }}
+          >
+            <FontAwesome name="undo" size={35} color="#ffffff" />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -209,7 +221,7 @@ const formStyles = StyleSheet.create({
     width: "45%",
   },
   textInput: {
-    fontSize: 18,
+    fontSize: 22,
     marginVertical: 10,
   },
   input: {
@@ -233,11 +245,15 @@ const formStyles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 5,
   },
-
   textSubmit: {
     fontSize: 18,
     color: "#FFFFFF",
     fontWeight: "bold",
+  },
+  messageError: {
+    fontSize: 18,
+    color: "#FF0000",
+    marginVertical: 10,
   },
 });
 export default FormInform;

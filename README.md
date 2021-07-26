@@ -5,8 +5,13 @@
 
 ### Pending tasks
 
-- [ ] Change hours
 - [ ] Delete month informs prior to last 3 months
+
+### 1.6
+
+- Logic in FormInform improved both for InformScreen and EditInformScreen
+- EditInform js deleted
+- Method that deletes every month before last three months appears to be working okay, but no test was done yet
 
 ### 1.5
 
